@@ -1,0 +1,6 @@
+@DataShareBackend_HostAddress = http://localhost:5089
+
+GET {{DataShareBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
