@@ -6,7 +6,12 @@ C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\DataShareBackend.runtimeconfig.json
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\DataShareBackend.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\DataShareBackend.pdb
+C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Npgsql.dll
+C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -28,7 +33,6 @@ C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\DataShar.E1F2D0B6.Up2Date
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\DataShareBackend.dll
 C:\Users\aurel\Desktop\Expert-Devops\Projet_3\P3_Pilotez_le_developpement_d_une_solution_informatique\src\backend\DataShareBackend\obj\Debug\net8.0\refint\DataShareBackend.dll
