@@ -14,6 +14,14 @@ using Microsoft.AspNetCore.Diagnostics;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 
+//Import du service hash
+
+
+
+
+
+
+
 namespace DataShareBackend.Controllers
 {
 
@@ -25,9 +33,14 @@ namespace DataShareBackend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DataShareDbContext _context;
-        public UsersController(DataShareDbContext context)
+        private readonly MyPasswordService _passwordService;
+
+        //import des services en paramêtre
+
+        public UsersController(DataShareDbContext context, MyPasswordService passwordService)
         {
             _context = context;
+            _passwordService = passwordService;
         }
 
 
@@ -89,7 +102,7 @@ namespace DataShareBackend.Controllers
                     LastName = userDto.LastName,
                     Login = userDto.Login,
                     Picture = userDto.Picture,
-                    Password = HashPassword(userDto.Password),
+                    Password = _passwordService.HashPassword(userDto.Password),
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -131,51 +144,40 @@ namespace DataShareBackend.Controllers
         {
             try
             {
-           
-             if (await _context.Users.AnyAsync ( u=>u.Email == userDto.Email))
-
+              //test si l'un des champs est null
+                if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
                 {
-                    return Ok(new { message = "Utilisateur existe" });
+                    return BadRequest(new { message = "L'email et le mot de passe sont demandés" });
                 }
 
+                // Cherche l'utilisateur par email
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDto.Email);
 
-            //    if (await _context.Users.AnyAsync(u => u.Password == userDto.Password))
-
-              //  {
-              //      return Ok(new { message = "Utilisateur existe" });
-               //  }
-                else
+                // Vérifier si l'utilisateur existe
+                if (user == null)
                 {
-
-                    return BadRequest(new { message = "L'email ou le mots de passe n'existe pas dans la base de donnée" });
+                    return BadRequest(new { message = "Cet email n'a pas été trouvé" });
                 }
 
+                // Hachage du mot de passe reçu pour comparaison
+                var pass = _passwordService.HashPassword(userDto.Password);
 
+                // Comparer le mot de passe
+                if (user.Password != pass)
+                {
+                    return BadRequest(new { message = "Le mot de passe n'est pas correct" });
+                }
 
-
-
-          
-
-
-
+                // Connexion réussie
+                return Ok(new { message = "Email et mot de passe vérifiés", userId = user.Id });
             }
-
-
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Erreur lors de la connexion", error = ex.Message });
             }
         }
 
-        // Méthode pour hasher le mot de passe
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(bytes);
-            }
-        }
+ 
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
