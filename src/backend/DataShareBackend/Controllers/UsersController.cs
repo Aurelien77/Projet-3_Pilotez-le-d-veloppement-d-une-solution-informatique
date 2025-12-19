@@ -5,19 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
+
+//Import des classes DTO
+
+using DataShareBackend.DTO;
+using Microsoft.AspNetCore.Diagnostics;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-public class CreateUserDto
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Login { get; set; }
-    public string Picture { get; set; }
-}
+
 
 namespace DataShareBackend.Controllers
 {
+
+
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -27,6 +29,14 @@ namespace DataShareBackend.Controllers
         {
             _context = context;
         }
+
+
+
+
+
+
+        // api/<UsersController/id>
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Users>> GetUser(int id)
@@ -47,7 +57,14 @@ namespace DataShareBackend.Controllers
                 return StatusCode(500, new { message = "Erreur lors de la récupération de l'utilisateur", error = ex.Message });
             }
         }
+
+
+
+
+
         // api/<UsersController/register>
+
+
         [HttpPost("register")]
         public async Task<ActionResult<Users>> CreateUser([FromBody] CreateUserDto userDto)
         {
@@ -84,6 +101,69 @@ namespace DataShareBackend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Erreur lors de la création de l'utilisateur", error = ex.Message });
+            }
+        }
+
+        // api/<UsersController/login>
+
+        //**
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="userDto"></param>
+        /// <returns> 
+        /// 
+        /// 200 connexion réussit | erreur 401  ( Unauthorized )
+        /// 
+        /// JSON  {
+        ///  "message": "Connexion réussie",
+        ///     "userId": 1
+        /// 
+        /// }
+        /// 
+        /// 
+        /// 
+        /// 
+        /// </returns>
+        //**
+        [HttpPost("login")]
+        public async Task<ActionResult<Users>> Login([FromBody] LoginDto userDto)
+        {
+            try
+            {
+           
+             if (await _context.Users.AnyAsync ( u=>u.Email == userDto.Email))
+
+                {
+                    return Ok(new { message = "Utilisateur existe" });
+                }
+
+
+            //    if (await _context.Users.AnyAsync(u => u.Password == userDto.Password))
+
+              //  {
+              //      return Ok(new { message = "Utilisateur existe" });
+               //  }
+                else
+                {
+
+                    return BadRequest(new { message = "L'email ou le mots de passe n'existe pas dans la base de donnée" });
+                }
+
+
+
+
+
+          
+
+
+
+            }
+
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erreur lors de la connexion", error = ex.Message });
             }
         }
 

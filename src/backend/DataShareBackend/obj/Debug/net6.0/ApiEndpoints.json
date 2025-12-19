@@ -76,6 +76,32 @@
   },
   {
     "ContainingType": "DataShareBackend.Controllers.UsersController",
+    "Method": "Login",
+    "RelativePath": "api/Users/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userDto",
+        "Type": "DataShareBackend.DTO.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "DataShareBackend.Models.Users",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DataShareBackend.Controllers.UsersController",
     "Method": "CreateUser",
     "RelativePath": "api/Users/register",
     "HttpMethod": "POST",
@@ -84,7 +110,7 @@
     "Parameters": [
       {
         "Name": "userDto",
-        "Type": "CreateUserDto",
+        "Type": "DataShareBackend.DTO.CreateUserDto",
         "IsRequired": true
       }
     ],
