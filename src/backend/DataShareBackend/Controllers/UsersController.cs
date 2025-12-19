@@ -47,8 +47,8 @@ namespace DataShareBackend.Controllers
                 return StatusCode(500, new { message = "Erreur lors de la récupération de l'utilisateur", error = ex.Message });
             }
         }
-
-        [HttpPost]
+        // api/<UsersController/register>
+        [HttpPost("register")]
         public async Task<ActionResult<Users>> CreateUser([FromBody] CreateUserDto userDto)
         {
             try

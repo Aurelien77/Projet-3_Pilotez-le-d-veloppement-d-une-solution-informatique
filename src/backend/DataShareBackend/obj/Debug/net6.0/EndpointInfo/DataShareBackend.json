@@ -106,7 +106,7 @@
         }
       }
     },
-    "/api/Users": {
+    "/api/Users/register": {
       "post": {
         "tags": [
           "Users"
