@@ -1244,11 +1244,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aurel\\Desktop\\Expert-Devops\\Projet_3\\P3_Pilotez_le_developpement_d_une_solution_informatique\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
+      "projectUniqueName": "C:\\Users\\aurel\\Desktop\\P3\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
       "projectName": "DataShareBackend",
-      "projectPath": "C:\\Users\\aurel\\Desktop\\Expert-Devops\\Projet_3\\P3_Pilotez_le_developpement_d_une_solution_informatique\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
+      "projectPath": "C:\\Users\\aurel\\Desktop\\P3\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
       "packagesPath": "C:\\Users\\aurel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aurel\\Desktop\\Expert-Devops\\Projet_3\\P3_Pilotez_le_developpement_d_une_solution_informatique\\src\\backend\\DataShareBackend\\obj\\",
+      "outputPath": "C:\\Users\\aurel\\Desktop\\P3\\src\\backend\\DataShareBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

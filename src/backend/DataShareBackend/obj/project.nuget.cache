@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lUhSdtcMqcg=",
+  "dgSpecHash": "KYNMAmnwotM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\aurel\\Desktop\\Expert-Devops\\Projet_3\\P3_Pilotez_le_developpement_d_une_solution_informatique\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
+  "projectFilePath": "C:\\Users\\aurel\\Desktop\\P3\\src\\backend\\DataShareBackend\\DataShareBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aurel\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\aurel\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.36\\microsoft.entityframeworkcore.6.0.36.nupkg.sha512",
