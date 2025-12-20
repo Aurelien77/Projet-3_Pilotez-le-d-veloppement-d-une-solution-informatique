@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using DataShareBackend.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,15 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
+});
+
+//Pour injecter le service du token dans l'application
+
+builder.Services.Configure<TokenSetting>(builder.Configuration.GetSection("TokenSettings"));
+builder.Services.AddSingleton<TokenService>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<TokenSetting>>();
+    return new TokenService(options.Value);
 });
 
 // Swagger pour tester l'API

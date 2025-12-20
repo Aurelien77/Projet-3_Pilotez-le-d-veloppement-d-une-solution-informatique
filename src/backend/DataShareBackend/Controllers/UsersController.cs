@@ -17,15 +17,8 @@ using Microsoft.AspNetCore.Diagnostics;
 //Import du service hash
 
 
-
-
-
-
-
 namespace DataShareBackend.Controllers
 {
-
-
 
 
     [Route("api/[controller]")]
@@ -34,17 +27,15 @@ namespace DataShareBackend.Controllers
     {
         private readonly DataShareDbContext _context;
         private readonly MyPasswordService _passwordService;
-
+        private readonly TokenService _tokenService;
         //import des services en paramêtre
 
-        public UsersController(DataShareDbContext context, MyPasswordService passwordService)
+        public UsersController(DataShareDbContext context, MyPasswordService passwordService, TokenService tokenService)
         {
             _context = context;
             _passwordService = passwordService;
+            _tokenService = tokenService;
         }
-
-
-
 
 
 
@@ -131,12 +122,7 @@ namespace DataShareBackend.Controllers
         /// JSON  {
         ///  "message": "Connexion réussie",
         ///     "userId": 1
-        /// 
         /// }
-        /// 
-        /// 
-        /// 
-        /// 
         /// </returns>
         //**
         [HttpPost("login")]
@@ -167,9 +153,21 @@ namespace DataShareBackend.Controllers
                 {
                     return BadRequest(new { message = "Le mot de passe n'est pas correct" });
                 }
+                //Enregistre le token dans un cookie du navigateur Web.
+                var token = _tokenService.GenerateToken(user, new List<string>());
 
+                var cookieOptions = new CookieOptions
+
+                {
+                    HttpOnly = true,                  
+                    Secure = true,                   
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(_tokenService.GetTokenExpirationDays())
+                };
+
+                Response.Cookies.Append("jwt_token", token, cookieOptions);
                 // Connexion réussie
-                return Ok(new { message = "Email et mot de passe vérifiés", userId = user.Id });
+                return Ok(new { message = "Email et mot de passe vérifiés", userId = user.Id, token });
             }
             catch (Exception ex)
             {

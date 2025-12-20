@@ -106,3 +106,10 @@ C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net6.0\refint\D
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net6.0\DataShareBackend.pdb
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net6.0\DataShareBackend.genruntimeconfig.cache
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net6.0\ref\DataShareBackend.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.Bcl.TimeProvider.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
