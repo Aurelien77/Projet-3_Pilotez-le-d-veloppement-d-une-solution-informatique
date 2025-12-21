@@ -1,34 +1,33 @@
-﻿using DataShareBackend.Data;
-using DataShareBackend.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
-
-
-//Import des classes DTO
-
-using DataShareBackend.DTO;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using DataShareBackend.Data;   //le dosiser data est utiliser comme Le context
+using DataShareBackend.Models;  // Le model 
+using Microsoft.AspNetCore.Mvc;   //crée la logic route controller et si besoin une vue
+using Microsoft.EntityFrameworkCore;   //Logic ORM
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+using DataShareBackend.DTO;   //Utilisation du dossier DTO
 
-//Import du service hash
-
-
-namespace DataShareBackend.Controllers
+namespace DataShareBackend.Controllers    
 {
 
 
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]")]   // Toutes les routes débuteront par   api/nom du controller - conrollers =  api/Users
+
+    [ApiController]   // La class est un controller
+
     public class UsersController : ControllerBase
     {
+        //Datasharedbcontext est hérité de program.cs et appele DataShareDbcontext.cs => Le context 
+
         private readonly DataShareDbContext _context;
+
+        //Les services
+
         private readonly MyPasswordService _passwordService;
         private readonly TokenService _tokenService;
-        //import des services en paramêtre
+
+
+        /// Attention : les services sont déjà construit mais on les passent en paramêtres
 
         public UsersController(DataShareDbContext context, MyPasswordService passwordService, TokenService tokenService)
         {
@@ -93,6 +92,7 @@ namespace DataShareBackend.Controllers
                     LastName = userDto.LastName,
                     Login = userDto.Login,
                     Picture = userDto.Picture,
+                    //utilise le service MyPasswordService passwordService.HashPassword  
                     Password = _passwordService.HashPassword(userDto.Password),
                     CreatedAt = DateTime.UtcNow
                 };

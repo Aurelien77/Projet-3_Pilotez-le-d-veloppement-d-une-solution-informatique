@@ -1,18 +1,23 @@
 ﻿using DataShareBackend.Models;
+
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+// ORM
+
 
 namespace DataShareBackend.Data
+    //Fournit un nom pour appeler le composant ailleur
 {
     public class DataShareDbContext : DbContext
+       
+
     {
         public DataShareDbContext(DbContextOptions<DataShareDbContext> options)
             : base(options)
         {
+
         }
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<Users> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,10 +1,10 @@
-﻿using System;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataShareBackend.Models
 {
-    [Table("users")] // Nom exact de votre table PostgreSQL
+    [Table("users")] 
     public class Users
     {
         [Key]
