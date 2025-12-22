@@ -1,11 +1,13 @@
 ﻿using DataShareBackend.Data;   //le dosiser data est utiliser comme Le context
-using DataShareBackend.Models;  // Le model 
-using Microsoft.AspNetCore.Mvc;   //crée la logic route controller et si besoin une vue
-using Microsoft.EntityFrameworkCore;   //Logic ORM
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 using DataShareBackend.DTO;   //Utilisation du dossier DTO
+using DataShareBackend.Models;  // Le model 
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;   //crée la logic route controller et si besoin une vue
+using Microsoft.EntityFrameworkCore;   //Logic ORM
+
+using System.Text.RegularExpressions; // Pour Regex
 
 namespace DataShareBackend.Controllers    
 {
@@ -73,17 +75,68 @@ namespace DataShareBackend.Controllers
         {
             try
             {
-                // Vérifier si l'email existe déjà
-                if (await _context.Users.AnyAsync(u => u.Email == userDto.Email))
+
+                //Controlle du champ de l'email 
+                var emailRegex = new Regex(@"^[A-Za-z0-9._%+-]{3,}@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$");
+
+                if (string.IsNullOrWhiteSpace(userDto.Email) || !emailRegex.IsMatch(userDto.Email))
                 {
-                    return BadRequest(new { message = "Cet email est déjà utilisé" });
+                    return BadRequest(new { message = "L'email fourni n'est pas valide. Assurez-vous qu'il contient au moins 3 lettres, un '@' et un domaine correct (ex: .com, .fr, .net)." });
                 }
+
+
+                // ----------------------------Validations-----------------------------------
+
+                // Vérifier si l'email existe déjà
+                if (string.IsNullOrWhiteSpace(userDto.Email))
+                {
+                    return BadRequest(new { message = "L'email est requis et ne peut pas être vide." });
+                }
+
+              
+             
+
+
+                //Vérifier si le login est valide
+                var loginRegex = new Regex(@"^[a-zA-Z0-9]{3,20}$");
+                if (!string.IsNullOrEmpty(userDto.Login) && !loginRegex.IsMatch(userDto.Login))
+                {
+                    return BadRequest(new { message = "Login invalide (3 à 20 caractères, lettres et chiffres uniquement)" });
+                }
+                //Verifier si le mots de passe est valide 
+
+                var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
+
+                if (string.IsNullOrWhiteSpace(userDto.Password))
+                {
+                    return BadRequest(new { message = "Le mot de passe est vide. Veuillez saisir un mot de passe." });
+                }
+
+                if (!passwordRegex.IsMatch(userDto.Password))
+                {
+                    return BadRequest(new
+                    {
+                        message = "Le mot de passe n'est pas valide. Il doit contenir au moins " +
+                                  "- 8 caractères" +
+                                  "- 1 lettre majuscule" +
+                                  "- 1 lettre minuscule" +
+                                  "- 1 chiffre" +
+                                  "- 1 caractère spécial (ex: !@#$%^&*)"
+                    });
+                }
+
+
 
                 // Vérifier si le login existe déjà
                 if (!string.IsNullOrEmpty(userDto.Login) && await _context.Users.AnyAsync(u => u.Login == userDto.Login))
                 {
                     return BadRequest(new { message = "Ce login est déjà utilisé" });
                 }
+
+
+
+
+
 
                 var user = new Users
                 {
