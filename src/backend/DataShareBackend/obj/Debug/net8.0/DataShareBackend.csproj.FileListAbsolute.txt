@@ -114,6 +114,7 @@ C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\staticwe
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\DataShar.E1F2D0B6.Up2Date
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\DataShareBackend.dll
 C:\Users\aurel\Desktop\P3\src\backend\DataShareBackend\obj\Debug\net8.0\refint\DataShareBackend.dll
