@@ -1,52 +1,6 @@
 [
   {
     "ContainingType": "DataShareBackend.Controllers.UsersController",
-    "Method": "GetAllUsers",
-    "RelativePath": "api/Users",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[DataShareBackend.Models.Users, DataShareBackend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "DataShareBackend.Controllers.UsersController",
-    "Method": "CreateUser",
-    "RelativePath": "api/Users",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userDto",
-        "Type": "DataShareBackend.Controllers.CreateUserDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "DataShareBackend.Models.Users",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "DataShareBackend.Controllers.UsersController",
     "Method": "GetUser",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "GET",
@@ -73,7 +27,7 @@
   },
   {
     "ContainingType": "DataShareBackend.Controllers.UsersController",
-    "Method": "UpdateUser",
+    "Method": "Put",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -85,16 +39,22 @@
         "IsRequired": true
       },
       {
-        "Name": "userDto",
-        "Type": "DataShareBackend.Controllers.UpdateUserDto",
+        "Name": "value",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "DataShareBackend.Controllers.UsersController",
-    "Method": "DeleteUser",
+    "Method": "Delete",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -106,19 +66,31 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "DataShareBackend.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[DataShareBackend.WeatherForecast, DataShareBackend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DataShareBackend.Controllers.UsersController",
+    "Method": "Login",
+    "RelativePath": "api/Users/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userDto",
+        "Type": "DataShareBackend.DTO.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "DataShareBackend.Models.Users",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -126,7 +98,32 @@
         ],
         "StatusCode": 200
       }
+    ]
+  },
+  {
+    "ContainingType": "DataShareBackend.Controllers.UsersController",
+    "Method": "CreateUser",
+    "RelativePath": "api/Users/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userDto",
+        "Type": "DataShareBackend.DTO.CreateUserDto",
+        "IsRequired": true
+      }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": [
+      {
+        "Type": "DataShareBackend.Models.Users",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]
