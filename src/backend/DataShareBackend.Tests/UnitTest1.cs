@@ -4,6 +4,8 @@ using DataShareBackend.DTO;
 using DataShareBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit;
@@ -53,7 +55,7 @@ namespace DataShareBackend.Tests
 
         //Création de METHODES contextualisée lié a la class model Shareddbcontext pour simuler une BD
         //Méthode poru récupéré le data model
-       
+
         private DataShareDbContext CreateContext(string dbName)
         {
             var options = new DbContextOptionsBuilder<DataShareDbContext>()
@@ -62,7 +64,7 @@ namespace DataShareBackend.Tests
 
             return new DataShareDbContext(options);
         }
-        
+
 
         //Méthode pour récupéré le Model User  + injecter PassService (Hash) + Token
 
@@ -75,7 +77,7 @@ namespace DataShareBackend.Tests
 
         //********************************** ERRORS **********************************//
         [Fact]
-        public async Task Wrong_create_user_email() 
+        public async Task Wrong_create_user_email()
         {
             await using var context = CreateContext("TestDb_CreateUser_Invalid_user_email");
             var controller = CreateController(context);
@@ -170,7 +172,7 @@ namespace DataShareBackend.Tests
             Assert.Equal("Doe", createdUser.LastName);
             Assert.Equal("https://example.com/picture.jpg", createdUser.Picture);
             Assert.NotNull(createdUser.Password);
-
+          
             _output.WriteLine($"--- Utilisateur créé ---");
             _output.WriteLine($"ID: {createdUser.Id}");
             _output.WriteLine($"Email: {createdUser.Email}");
@@ -225,5 +227,57 @@ namespace DataShareBackend.Tests
             _output.WriteLine($"Mot de passe tenté : {loginDto.Password}");
             _output.WriteLine($"Message renvoyé : {error.Message}");
         }
-    }
+
+
+        //********************************** SUCCES **********************************//
+
+       
+
+[Fact]
+    public async Task Login_working_good()
+    {
+        // Arrange
+        await using var context = CreateContext("TestDb_LoginSuccess");
+
+        context.Users.Add(new Users
+        {
+            Email = "test@example.com",
+            Login = "TestUser",
+            Password = _passwordService.HashPassword("Password123!"),
+            CreatedAt = DateTime.UtcNow
+        });
+        await context.SaveChangesAsync();
+
+        var controller = CreateController(context);
+
+        var loginDto = new LoginDto
+        {
+            Email = "test@example.com",
+            Password = "Password123!"
+        };
+
+        // Act
+        var result = await controller.Login(loginDto);
+
+       var     result2 = result.Value;
+
+        // Assert
+     
+
+        _output.WriteLine("✅ Login réussi");
+        _output.WriteLine($"Email : {loginDto.Email}");
+        _output.WriteLine($"UserId : {loginDto.Password}");
+        _output.WriteLine($"Token : {result}");
+
+           
+
+        }
+
+    //********************************************************************//
+
 }
+
+}
+
+
+
