@@ -19,6 +19,11 @@ namespace DataShareBackend.Data
 
         public DbSet<Users> Users { get; set; } = null!;
 
+
+        // Ajout de la table File 
+
+        public DbSet<Files> Files { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -62,6 +67,54 @@ namespace DataShareBackend.Data
                 entity.Property(u => u.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
+
+
+            //Tables pour les fichiers
+
+            modelBuilder.Entity<Files>(entity =>
+            {
+                entity.HasKey(f => f.Id);
+
+                entity.HasIndex(f => f.IdUser)
+                    .HasDatabaseName("IX_Files_IdUser");
+
+                entity.HasIndex(f => f.Deleted)
+                    .HasDatabaseName("IX_Files_Deleted");
+
+                entity.HasIndex(f => f.EndDate)
+                    .HasDatabaseName("IX_Files_EndDate");
+
+                entity.Property(f => f.FileName)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(f => f.FilePassword)
+                    .HasMaxLength(255);
+
+                entity.Property(f => f.FilePath)
+                    .HasMaxLength(500);
+
+                entity.Property(f => f.Deleted)
+                    .IsRequired()
+                    .HasDefaultValue(false);
+
+                entity.Property(f => f.CreationDate)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(f => f.EndDate)
+                    .IsRequired();
+
+                // Lien relationnel pour récupérer l'id de l'utilisateur qui envoit le fichier
+                entity.HasOne(f => f.User)
+                    .WithMany()
+                    .HasForeignKey(f => f.IdUser)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
         }
+
+
     }
 }

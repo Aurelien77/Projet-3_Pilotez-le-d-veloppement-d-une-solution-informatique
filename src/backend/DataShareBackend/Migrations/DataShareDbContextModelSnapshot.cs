@@ -17,10 +17,69 @@ namespace DataShareBackend.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.36")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DataShareBackend.Models.Files", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_date")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_date");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("file_name");
+
+                    b.Property<string>("FilePassword")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("file_password");
+
+                    b.Property<string>("FilePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("file_path");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("id_user");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Deleted")
+                        .HasDatabaseName("IX_Files_Deleted");
+
+                    b.HasIndex("EndDate")
+                        .HasDatabaseName("IX_Files_EndDate");
+
+                    b.HasIndex("IdUser")
+                        .HasDatabaseName("IX_Files_IdUser");
+
+                    b.ToTable("files");
+                });
 
             modelBuilder.Entity("DataShareBackend.Models.Users", b =>
                 {
@@ -80,6 +139,17 @@ namespace DataShareBackend.Migrations
                         .HasDatabaseName("IX_Users_Login");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("DataShareBackend.Models.Files", b =>
+                {
+                    b.HasOne("DataShareBackend.Models.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

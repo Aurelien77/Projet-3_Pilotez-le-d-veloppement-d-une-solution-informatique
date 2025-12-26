@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c66eaa0a09d7a29ad7611fd4e00fc51c9707a91")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ae1febf85eaba9e05dee5164fd620bdc3ed92d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
