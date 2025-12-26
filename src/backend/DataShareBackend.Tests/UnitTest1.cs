@@ -2,13 +2,11 @@
 using DataShareBackend.Data;
 using DataShareBackend.DTO;
 using DataShareBackend.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
-using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace DataShareBackend.Tests
@@ -231,51 +229,73 @@ namespace DataShareBackend.Tests
 
         //********************************** SUCCES **********************************//
 
-       
 
-[Fact]
-    public async Task Login_working_good()
-    {
-        // Arrange
-        await using var context = CreateContext("TestDb_LoginSuccess");
 
-        context.Users.Add(new Users
+        [Fact]
+        public async Task Login_working_good()
         {
-            Email = "test@example.com",
-            Login = "TestUser",
-            Password = _passwordService.HashPassword("Password123!"),
-            CreatedAt = DateTime.UtcNow
-        });
-        await context.SaveChangesAsync();
+            // Arrange
+            await using var context = CreateContext("TestDb_LoginSuccess");
 
-        var controller = CreateController(context);
+            context.Users.Add(new Users
+            {
+                Email = "test@example.com",
+                Login = "TestUser",
+                Password = _passwordService.HashPassword("Password123!"),
+                CreatedAt = DateTime.UtcNow
+            });
+            await context.SaveChangesAsync();
 
-        var loginDto = new LoginDto
-        {
-            Email = "test@example.com",
-            Password = "Password123!"
-        };
+            var controller = CreateController(context);
 
-        // Act
-        var result = await controller.Login(loginDto);
+            // Mock du HttpContext pour éviter l'erreur avec Response.Cookies
+            var httpContext = new DefaultHttpContext();
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
 
-       var     result2 = result.Value;
+            var loginDto = new LoginDto
+            {
+                Email = "test@example.com",
+                Password = "Password123!"
+            };
 
-        // Assert
-     
+            // Act
+            var result = await controller.Login(loginDto);
 
-        _output.WriteLine("✅ Login réussi");
-        _output.WriteLine($"Email : {loginDto.Email}");
-        _output.WriteLine($"UserId : {loginDto.Password}");
-        _output.WriteLine($"Token : {result}");
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.NotNull(okResult.Value);
 
-           
+            //   / ! \ correction d'un bug lors du test car il était impossible de récupérer le token en retour de la reponse, bienq ue cela était possible sur Swagger.
+            //   Solution : Lors des test unitaire il n'y a pas de requêtes HTTP
+            //  Le fait de Mocker uen requuette HTTP permet de résoudre. Le Toekn est récupére lors de test Xunit.
 
+            // transformer la reposne reçu C# en JSON  => Ok
+            var json = JsonSerializer.Serialize(okResult.Value);
+            var loginResponse = JsonSerializer.Deserialize<LoginResponse>(json);
+
+            Assert.NotNull(loginResponse);
+            Assert.Equal("Email et mot de passe vérifiés", loginResponse.Message);
+            Assert.True(loginResponse.UserId > 0);
+            Assert.NotNull(loginResponse.Token);
+            Assert.NotEmpty(loginResponse.Token);
+
+            // Vérifier que le cookie a bien été créé
+            Assert.True(httpContext.Response.Headers.ContainsKey("Set-Cookie"));
+
+            _output.WriteLine("Login réussi");
+            _output.WriteLine($"Email : {loginDto.Email}");
+            _output.WriteLine($"UserId : {loginResponse.UserId}");
+            _output.WriteLine($"Token : {loginResponse.Token}");
+            _output.WriteLine($"Message : {loginResponse.Message}");
+            _output.WriteLine($"Cookie créé : {httpContext.Response.Headers["Set-Cookie"]}");
         }
 
-    //********************************************************************//
+        //********************************************************************//
 
-}
+    }
 
 }
 

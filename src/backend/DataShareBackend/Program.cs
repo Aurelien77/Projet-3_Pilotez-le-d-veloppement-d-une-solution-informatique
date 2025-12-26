@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<MyPasswordService, PasswordService>();
-
+builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
 
 // Configuration de la connexion PostgreSQL
 builder.Services.AddDbContext<DataShareDbContext>(options =>
