@@ -87,14 +87,19 @@ namespace DataShareBackend.Controllers
 
                 // ----------------------------Validations-----------------------------------
 
-                // Vérifier si l'email existe déjà
+                // Vérifier si l'email est vide
                 if (string.IsNullOrWhiteSpace(userDto.Email))
                 {
                     return BadRequest(new { message = "L'email est requis et ne peut pas être vide." });
                 }
 
-              
-             
+                // Vérifier si l'email existe déjà en base de données
+                if (await _context.Users.AnyAsync(u => u.Email == userDto.Email))
+                {
+                    return BadRequest(new { message = "Cet email est déjà utilisé" });
+                }
+
+
 
 
                 //Vérifier si le login est valide
