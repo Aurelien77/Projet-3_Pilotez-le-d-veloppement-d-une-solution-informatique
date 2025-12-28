@@ -1,12 +1,7 @@
+import React from "react";
 
-import React from 'react';
-
-const Profil= () => {
-  return (
-    <div>
-      Profil
-    </div>
-  );
+const Profil = () => {
+  return <div>Vous êtes maintenant connecter a votre page de Profil 👤</div>;
 };
 
-export default Profil; 
+export default Profil;
