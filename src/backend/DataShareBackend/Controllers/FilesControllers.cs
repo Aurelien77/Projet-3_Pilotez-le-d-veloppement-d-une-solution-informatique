@@ -124,8 +124,8 @@ namespace DataShareBackend.Controllers
                 _context.Files.Add(fileRecord);
                 await _context.SaveChangesAsync();
 
-                // Générer le lien de téléchargement
-                var downloadLink = $"{Request.Scheme}://{Request.Host}/api/Files/download/{fileRecord.Id}";
+                // Générer le lien de téléchargement => Modification pour lien vers API  var downloadLink = $"{Request.Scheme}://{Request.Host}/api/Files/download/{fileRecord.Id}";
+                var downloadLink = $"http://localhost:3000/download/{fileRecord.Id}";
 
                 return Ok(new
                 {

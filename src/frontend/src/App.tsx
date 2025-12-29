@@ -26,7 +26,7 @@ function App() {
 
             <Route path="/Register" element={<Register />} />
 
-            <Route path="/DownloadFile" element={<DowladdFile />} />
+            <Route path="/download/:fileId" element={<DowladdFile />} />
 
             <Route path="*" element={<Default />} />
           </Routes>
