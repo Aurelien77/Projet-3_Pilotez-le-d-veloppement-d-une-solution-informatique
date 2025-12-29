@@ -32,6 +32,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowCredentials();
     });
+
+
+
+
 });
 
 //Pour injecter le service du token dans l'application

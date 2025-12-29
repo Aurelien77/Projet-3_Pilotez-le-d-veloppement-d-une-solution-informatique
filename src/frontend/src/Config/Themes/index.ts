@@ -32,7 +32,7 @@ export const theme: Theme = {
     black: "#000000"
   },
   gradients: {
-    main: "linear-gradient(180deg, #fcaf88 0%, #e16965 100%)"
+    main: "linear-gradient(180deg, #FFB88C 0%, #DE6262 100%)"
   },
   fonts: {
     primary: 'Arial, sans-serif',

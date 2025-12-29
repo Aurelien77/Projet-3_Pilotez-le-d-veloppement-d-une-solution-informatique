@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import theme from "../../Config/Themes";
+import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
 
 /* ************************************************************ Typage ************************************************************ */

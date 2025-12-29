@@ -6,11 +6,12 @@ import Login from "./Pages/Accueil/Index";
 import Profil from "./Pages/Profil/Index";
 import Televersement from "./Pages/Televersement/Index";
 import Default from "./Pages/Default/Index";
-import { createBrowserHistory } from "history";
+
 import Connexion from "./Pages/Connexion/Index";
 import Register from "./Pages/Inscription";
+import Usersfiles from "./Pages/UsersFiles/Index";
+import DowladdFile from "./Pages/DowloadFiles/Index";
 
-const history = createBrowserHistory();
 function App() {
   return (
     <AuthProvider>
@@ -19,11 +20,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profil" element={<Profil />} />
+            <Route path="/profil" element={<Usersfiles />} />
             <Route path="/Televersement" element={<Televersement />} />
             <Route path="/Connexion" element={<Connexion />} />
 
             <Route path="/Register" element={<Register />} />
+
+            <Route path="/DownloadFile" element={<DowladdFile />} />
 
             <Route path="*" element={<Default />} />
           </Routes>

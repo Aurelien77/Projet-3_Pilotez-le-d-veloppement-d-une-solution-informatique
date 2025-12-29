@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import theme from "../../Config/Themes";
+import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
 import FileUpload from "../../Components/Upload";
-
+import { useAuth } from "../../Helpers/AuthContext";
 /* ************************************************************ Typage ************************************************************ */
 
 interface AccueilProps {
@@ -70,6 +70,16 @@ const Accueil: React.FC<AccueilProps> = ({
   const handleCloseModal = () => {
     setIsUploadModalOpen(false);
   };
+
+  // Test du Helper
+
+  const auth = useAuth();
+
+  console.log(auth);
+
+  const { authState } = useAuth();
+
+  console.log("Utilisateur connecté :", authState);
 
   /* ************************************************************ CSS Page de Garde ************************************************************ */
 

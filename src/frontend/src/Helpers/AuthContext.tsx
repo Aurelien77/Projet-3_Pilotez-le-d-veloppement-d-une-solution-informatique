@@ -34,6 +34,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       ...userData,
       status: true,
     }));
+
+    localStorage.setItem("user", JSON.stringify({ ...authState, ...userData, status: true }));
   };
 
   const logout = () => {
@@ -45,8 +47,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       login: "",
       status: false,
     });
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
+
+    localStorage.removeItem("user");
   };
 
   return <AuthContext.Provider value={{ authState, setAuthState, login, logout }}>{children}</AuthContext.Provider>;

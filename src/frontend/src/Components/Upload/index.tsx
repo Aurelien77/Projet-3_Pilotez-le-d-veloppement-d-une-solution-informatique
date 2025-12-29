@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import theme from "../../Config/Themes";
-
+import theme from "../../Config/Themes/Index";
+import { useAuth } from "../../Helpers/AuthContext";
 /* ************************************************************ Typage ************************************************************ */
 
 interface FileUploadProps {
@@ -45,6 +45,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const [isActive2, setIsActive2] = useState(false);
   const [isActiveClose, setIsActiveClose] = useState(false);
 
+  // Austate context
+
+  const { authState } = useAuth();
   /* ************************************************************ Fonctions ************************************************************ */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +95,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
       formData.append("File", selectedFile);
 
       // Si l'utilisateur est connecté, utiliser son ID, sinon ID 8 (invité)
-      const userIdToSend = userId || 8;
+      const userIdToSend = authState.id || 8;
       formData.append("IdUser", userIdToSend.toString());
 
       // Calculer la date de fin

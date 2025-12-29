@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import theme from "../../Config/Themes";
+import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Helpers/AuthContext";
 
@@ -70,16 +70,18 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
       }
 
       const data: LoginResponse = await response.json();
-      console.log("Connexion réussie :", data);
 
       // Mettre à jour le state global d'authentification
       login({
         id: data.userId,
         status: true,
       });
+      window.alert(data.message);
 
       // Rediriger vers la page profil
-      navigate("/profil");
+      setTimeout(() => {
+        navigate("/Profil");
+      }, 500);
     } catch (error) {
       console.error("Erreur lors du POST :", error);
       setErrorMessage("Erreur de connexion au serveur. Veuillez réessayer.");
@@ -88,7 +90,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
   };
 
   const handleCreateAccount = () => {
-    navigate("/Register");
+    navigate("/");
   };
 
   /* ************************************************************ CSS ************************************************************ */
