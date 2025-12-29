@@ -73,10 +73,10 @@ const Register: React.FC<InscriptionProps> = ({
     const dataforsend = {
       email,
       password,
-      firstName: null,
-      lastName: null,
-      login: null,
-      picture: null,
+      firstName: "MyFirstname",
+      lastName: "MyLastname",
+      login: "MyLogin",
+      picture: "MyPicture",
     };
 
     try {

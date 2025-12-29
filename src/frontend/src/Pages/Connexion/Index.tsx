@@ -50,7 +50,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
       email,
       password,
     };
-    console.log(dataforsend, "DATA ENVOYEES"); /* ************************************************************ ⚠️⚠️⚠️ Si un integeur est présent dans l'email renvoi une erreur  500  la veleur ( ici email ) ne peut pas être null    ⚠️⚠️⚠️ ************************************************************ */
+    console.log(dataforsend, "DATA ENVOYEES"); /* ************************************************************ ⚠️⚠️⚠️ Ne peux pas récupéré des valeurs null => A voir  ⚠️⚠️⚠️ ************************************************************ */
     try {
       const response = await fetch("https://localhost:7120/api/Users/login", {
         method: "POST",

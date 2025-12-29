@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useEffect, useState } from "react";
 import { AuthProvider } from "./Helpers/AuthContext";
 //Import des pages
 
-import Login from "./Pages/Login/Index";
+import Login from "./Pages/Accueil/Index";
 import Profil from "./Pages/Profil/Index";
 import Televersement from "./Pages/Televersement/Index";
 import Default from "./Pages/Default/Index";

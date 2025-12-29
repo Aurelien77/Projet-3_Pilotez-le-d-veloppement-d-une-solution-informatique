@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import theme from "../../Config/Themes";
 import { useNavigate } from "react-router-dom";
+import FileUpload from "../../Components/Upload";
 
 /* ************************************************************ Typage ************************************************************ */
 
@@ -35,6 +36,11 @@ const Accueil: React.FC<AccueilProps> = ({
 
   const [showGarde, setShowGarde] = useState<boolean>(true);
 
+  // Upload de fichiers
+  const [isUploadOpen, setIsUploadModalOpen] = useState<boolean>(false);
+
+  const [userId, setUserId] = useState<number | undefined>(undefined);
+
   /* ************************************************************ Effects ************************************************************ */
 
   useEffect(() => {
@@ -45,14 +51,24 @@ const Accueil: React.FC<AccueilProps> = ({
     return () => clearTimeout(timer);
   }, [transitionDelay]);
 
+  useEffect(() => {
+    //  state authcontext
+  }, []);
   /* ************************************************************ Fonctions ************************************************************ */
 
-  const handleFileUpload = () => {
-    console.log("Upload fichier");
-  };
   const navigate = useNavigate();
   const handleConnect = () => {
     navigate("/Connexion");
+  };
+
+  //Upload de fichiers
+
+  const handleFileUpload = () => {
+    setIsUploadModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsUploadModalOpen(false);
   };
 
   /* ************************************************************ CSS Page de Garde ************************************************************ */
@@ -71,7 +87,7 @@ const Accueil: React.FC<AccueilProps> = ({
     right: 0,
     bottom: 0,
     transition: "opacity 0.8s ease-in-out, visibility 0.8s ease-in-out",
-    //Création de la condition pour rendre la page de garde Hidden / ! \ Opacity reste un div present au premier plan.
+    //Création de la condition pour rendre la page de garde Hidden / ! \ !Opacity car dasn ce cas il reste un div present au premier plan.
     visibility: showGarde ? "visible" : "hidden",
   };
 
@@ -100,6 +116,9 @@ const Accueil: React.FC<AccueilProps> = ({
   const [hover, setHover] = React.useState(false);
   const [uploadHover2, setUploadHover2] = React.useState(false);
 
+  //******************************************Upload */
+
+  //*********************************** */
   const pageContainer: React.CSSProperties = {
     minHeight: "100vh",
     width: "100%",
@@ -196,6 +215,9 @@ const Accueil: React.FC<AccueilProps> = ({
 
     boxShadow: "none",
   };
+
+  /* ************************************************************ Rendu ************************************************************ */
+
   return (
     <>
       {/*Page de garde  */}
@@ -225,6 +247,10 @@ const Accueil: React.FC<AccueilProps> = ({
             </div>
           </div>
         </main>
+
+        {/*******************************************************   Composant  Upload  *******************************************************/}
+        {/*   Test : passage du composant en visible ou none au lieu d'un state dans le composant parent => A voir si cette approche complique l'étape des tests*/}
+        <FileUpload isOpen={isUploadOpen} onClose={handleCloseModal} userId={userId} />
 
         {/* Footer */}
         <footer style={footer}>
