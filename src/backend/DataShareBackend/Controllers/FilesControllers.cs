@@ -280,6 +280,7 @@ namespace DataShareBackend.Controllers
 
         // DELETE: api/Files/{id}
 
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteFile(int id, [FromQuery] int userId)
         {
@@ -293,13 +294,28 @@ namespace DataShareBackend.Controllers
                     return NotFound(new { message = "Fichier introuvable" });
                 }
 
-                // Vérifier si l'id de l'utilisateur estr bien propirétaire du fichier
+                // Vérifier si l'utilisateur est bien propriétaire du fichier
                 if (fileRecord.IdUser != userId)
                 {
                     return Forbid();
                 }
 
-                //Delete
+                // Supprimer le fichier physique du serveur
+                var filePath = Path.Combine(_environment.ContentRootPath, "uploads", fileRecord.FilePath ?? "");
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    catch (Exception fileEx)
+                    {
+                        Console.WriteLine($"Erreur lors de la suppression du fichier physique: {fileEx.Message}");
+                    }
+                }
+
+                // Soft delete dans la base de données
                 fileRecord.Deleted = true;
                 await _context.SaveChangesAsync();
 
@@ -310,6 +326,5 @@ namespace DataShareBackend.Controllers
                 return StatusCode(500, new { message = "Erreur lors de la suppression", error = ex.Message });
             }
         }
-
     }
 }
