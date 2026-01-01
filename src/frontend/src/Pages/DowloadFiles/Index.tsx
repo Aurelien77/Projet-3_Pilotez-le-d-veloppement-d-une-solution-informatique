@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import theme from "../../Config/Themes/Index";
+import Header from "../../Components/Header/Index";
+import Footer from "../../Components/Footer/Index";
 
 /* ************************************************************ Typage ************************************************************ */
 
@@ -11,6 +13,7 @@ interface FileInfo {
   creationDate: string;
   expirationDate: string;
   isExpired: boolean;
+
   uploadedBy: {
     id: number;
     email: string;
@@ -30,8 +33,8 @@ const DownloadFiles: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-
-  /* ************************************************************ Effects ************************************************************ */
+  const [headerButtonHover, setHeaderButtonHover] = useState(false);
+  /* ************************************************************ Use Effects ************************************************************ */
 
   useEffect(() => {
     if (fileId) {
@@ -69,23 +72,17 @@ const DownloadFiles: React.FC = () => {
 
   const handleDownload = async (e?: React.FormEvent) => {
     e?.preventDefault();
-
     if (!fileInfo) return;
 
     try {
       setIsDownloading(true);
       setError("");
 
-      // Construire l'URL avec le mot de passe si nécessaire
-      let downloadUrl = `https://localhost:7120/api/Files/download/${fileId}`;
-
-      if (fileInfo.hasPassword && password) {
-        downloadUrl += `?password=${encodeURIComponent(password)}`;
-      }
-
-      const response = await fetch(downloadUrl, {
-        method: "GET",
+      const response = await fetch(`https://localhost:7120/api/Files/download/${fileId}`, {
+        method: "POST",
         credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: fileInfo.hasPassword ? password : null }),
       });
 
       if (!response.ok) {
@@ -93,10 +90,7 @@ const DownloadFiles: React.FC = () => {
         throw new Error(errorData.message || "Erreur lors du téléchargement");
       }
 
-      // Récupérer le blob
       const blob = await response.blob();
-
-      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -134,19 +128,30 @@ const DownloadFiles: React.FC = () => {
     flexDirection: "column",
   };
 
-  const header: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px 40px",
-  };
-
+  /* ***********************  Header Style   * ********************** */
   const logoStyle: React.CSSProperties = {
-    fontSize: "clamp(0.5rem, 4vw, 1.3rem)",
+    fontSize: "1.5rem",
     fontWeight: 900,
     color: theme.colors.black,
-    fontFamily: theme.fonts.primary,
+    marginBottom: "40px",
   };
+
+  const ButtonStyle: React.CSSProperties = {
+    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
+    background: headerButtonHover ? "#1a202c" : "#2d3748",
+    color: theme.colors.white,
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "clamp(0.85rem, 2vw, 1rem)",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    boxShadow: headerButtonHover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
+    fontFamily: theme.fonts.primary,
+    transform: headerButtonHover ? "translateY(-2px)" : "translateY(0)",
+    whiteSpace: "nowrap",
+  };
+  /* ***********************  Fin Header Style   * ********************** */
 
   const connectButtonStyle: React.CSSProperties = {
     padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
@@ -312,28 +317,24 @@ const DownloadFiles: React.FC = () => {
     color: "#718096",
   };
 
-  const footer: React.CSSProperties = {
+  /* ***********************  Footer Style   * ********************** */
+  const footerStyle: React.CSSProperties = {
     padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
+    flexShrink: 0,
   };
 
   const copyrightStyle: React.CSSProperties = {
     fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
     color: theme.colors.black,
     opacity: 0.8,
+    margin: 0,
     fontFamily: theme.fonts.primary,
   };
-
-  /* ************************************************************ Rendu ************************************************************ */
+  /* ***********************  Fin Footer Style   * ********************** */
 
   return (
     <div style={pageContainer}>
-      {/* Header */}
-      <header style={header}>
-        <h1 style={logoStyle}>DataShare</h1>
-        <button style={connectButtonStyle} onClick={() => navigate("/connexion")}>
-          Se connecter
-        </button>
-      </header>
+      <Header logoStyle={logoStyle} buttonStyle={ButtonStyle} />
 
       {/* Contenu principal */}
       <main style={mainContent}>
@@ -342,16 +343,20 @@ const DownloadFiles: React.FC = () => {
             <div style={loadingStyle}>Chargement du fichier...</div>
           ) : !fileInfo ? (
             <>
-              <div style={errorStyle}>Fichier introuvable</div>
+              <div style={expiredContainerStyle}>
+                <div style={expiredIconStyle}></div>
+                <h2 style={expiredTitleStyle}>❗ Ce fichier n'est plus disponible en téléchargement </h2>
+                <p style={expiredTextStyle}>Car il a expiré.</p>
+              </div>
               <button style={buttonStyle} onClick={() => navigate("/")}>
                 Retour à l'accueil
               </button>
             </>
           ) : fileInfo.isExpired ? (
             <div style={expiredContainerStyle}>
-              <div style={expiredIconStyle}>⚠️</div>
-              <h2 style={expiredTitleStyle}>Ce fichier a expiré</h2>
-              <p style={expiredTextStyle}>Ce fichier n'est plus stocké chez nous et n'est plus disponible au téléchargement.</p>
+              <div style={expiredIconStyle}></div>
+              <h2 style={expiredTitleStyle}>❗ Ce fichier n'est plus disponible en téléchargement </h2>
+              <p style={expiredTextStyle}>Car il a expiré.</p>
             </div>
           ) : (
             <>
@@ -395,10 +400,7 @@ const DownloadFiles: React.FC = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer style={footer}>
-        <p style={copyrightStyle}>Copyright DataShare© 2025</p>
-      </footer>
+      <Footer containerStyle={footerStyle} textStyle={copyrightStyle} />
     </div>
   );
 };

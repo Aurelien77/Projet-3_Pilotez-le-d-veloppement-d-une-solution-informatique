@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Helpers/AuthContext";
+import Header from "../../Components/Header/Index";
+import Footer from "../../Components/Footer/Index";
 
 /* ************************************************************ Typage ************************************************************ */
 
@@ -14,7 +16,6 @@ interface ConnexionProps {
   passwordPlaceholder?: string;
   createAccountText?: string;
   submitButtonText?: string;
-  copyrightText?: string;
 }
 
 interface LoginResponse {
@@ -25,7 +26,7 @@ interface LoginResponse {
 
 // React Fonctionnal Component (RFC)
 
-const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText = "Connexion", emailLabel = "Email", emailPlaceholder = "Saisissez votre email...", passwordLabel = "Mot de passe", passwordPlaceholder = "Saisissez votre mot de passe...", createAccountText = "Créer un compte", submitButtonText = "Se connecter", copyrightText = "Copyright DataShare© 2025" }) => {
+const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText = "Connexion", emailLabel = "Email", emailPlaceholder = "Saisissez votre email...", passwordLabel = "Mot de passe", passwordPlaceholder = "Saisissez votre mot de passe...", createAccountText = "Créer un compte", submitButtonText = "Se connecter" }) => {
   /* ************************************************************ States ************************************************************ */
 
   const [email, setEmail] = useState<string>("");
@@ -50,14 +51,14 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
       email,
       password,
     };
-    console.log(dataforsend, "DATA ENVOYEES"); /* ************************************************************ ⚠️⚠️⚠️ Ne peux pas récupéré des valeurs null => A voir  ⚠️⚠️⚠️ ************************************************************ */
+    console.log(dataforsend, "DATA ENVOYEES");
     try {
       const response = await fetch("https://localhost:7120/api/Users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", //Permet de recevoir et envoyer les cookies
+        credentials: "include", //Permet de recevoir le cookie
         body: JSON.stringify(dataforsend),
       });
 
@@ -76,12 +77,10 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
         id: data.userId,
         status: true,
       });
-      window.alert(data.message);
 
       // Rediriger vers la page profil
-      setTimeout(() => {
-        navigate("/Profil");
-      }, 500);
+
+      navigate("/Profil");
     } catch (error) {
       console.error("Erreur lors du POST :", error);
       setErrorMessage("Erreur de connexion au serveur. Veuillez réessayer.");
@@ -90,7 +89,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
   };
 
   const handleCreateAccount = () => {
-    navigate("/");
+    navigate("/Register");
   };
 
   /* ************************************************************ CSS ************************************************************ */
@@ -104,23 +103,15 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
     flexDirection: "column",
   };
 
-  const headerStyle: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
-    flexShrink: 0,
-  };
-
+  /* ***********************  Header Style   * ********************** */
   const logoStyle: React.CSSProperties = {
-    fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+    fontSize: "1.5rem",
     fontWeight: 900,
     color: theme.colors.black,
-    letterSpacing: "-1px",
-    fontFamily: theme.fonts.primary,
+    marginBottom: "40px",
   };
 
-  const connectButtonStyle: React.CSSProperties = {
+  const ButtonStyle: React.CSSProperties = {
     padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
     background: headerButtonHover ? "#1a202c" : "#2d3748",
     color: theme.colors.white,
@@ -135,7 +126,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
     transform: headerButtonHover ? "translateY(-2px)" : "translateY(0)",
     whiteSpace: "nowrap",
   };
-
+  /* ***********************  Fin Header Style   * ********************** */
   const mainContainerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -218,19 +209,6 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
     opacity: isLoading ? 0.7 : 1,
   };
 
-  const footerStyle: React.CSSProperties = {
-    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
-    flexShrink: 0,
-  };
-
-  const copyrightStyle: React.CSSProperties = {
-    fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
-    color: theme.colors.black,
-    opacity: 0.8,
-    margin: 0,
-    fontFamily: theme.fonts.primary,
-  };
-
   const errorMessageStyle: React.CSSProperties = {
     background: "rgba(239, 68, 68, 0.1)",
     border: "1px solid rgba(239, 68, 68, 0.3)",
@@ -243,18 +221,24 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
     fontWeight: 500,
     display: errorMessage ? "block" : "none",
   };
+  /* ***********************  Footer Style   * ********************** */
+  const footerStyle: React.CSSProperties = {
+    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
+    flexShrink: 0,
+  };
 
-  /* ************************************************************ Render ************************************************************ */
+  const copyrightStyle: React.CSSProperties = {
+    fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+    color: theme.colors.black,
+    opacity: 0.8,
+    margin: 0,
+    fontFamily: theme.fonts.primary,
+  };
+  /* ***********************  Fin Footer Style   * ********************** */
 
   return (
     <div style={pageContainerStyle}>
-      {/* Header */}
-      <header style={headerStyle}>
-        <h1 style={logoStyle}>{logoText}</h1>
-        <button style={connectButtonStyle} onMouseEnter={() => setHeaderButtonHover(true)} onMouseLeave={() => setHeaderButtonHover(false)}>
-          {submitButtonText}
-        </button>
-      </header>
+      <Header logoStyle={logoStyle} logoText={logoText} buttonStyle={ButtonStyle} />
 
       {/* Main formulaire */}
       <main style={mainContainerStyle}>
@@ -347,11 +331,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
           </form>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer style={footerStyle}>
-        <p style={copyrightStyle}>{copyrightText}</p>
-      </footer>
+      <Footer containerStyle={footerStyle} textStyle={copyrightStyle} />
     </div>
   );
 };

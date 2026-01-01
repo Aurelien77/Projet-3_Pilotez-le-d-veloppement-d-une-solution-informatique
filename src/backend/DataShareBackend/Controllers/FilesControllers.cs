@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.StaticFiles;
-//Pour que le navigateur reonnaisse le type de fichier a ouvrir
+//Pour que le navigateur reconnaisse le type de fichier a ouvrir
 
 namespace DataShareBackend.Controllers
 {
@@ -13,33 +13,10 @@ namespace DataShareBackend.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-
-        //  Les types Mime des fichiers sert au navigateur pour les ouvrir
-
- 
-        //private string GetContentType(string fileName)
-        //{
-        //    var extension = Path.GetExtension(fileName).ToLowerInvariant();
-        //    return extension switch
-        //    {
-        //        ".pdf" => "application/pdf",
-        //        ".jpg" or ".jpeg" => "image/jpeg",
-        //        ".png" => "image/png",
-        //        ".gif" => "image/gif",
-        //        ".txt" => "text/plain",
-        //        ".doc" => "application/msword",
-        //        ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        //        ".xls" => "application/vnd.ms-excel",
-        //        ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        //        ".zip" => "application/zip",
-        //        _ => "application/octet-stream"
-        //    };
-        //}
-
         private readonly DataShareDbContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly MyPasswordService _passwordService;
-        private const long MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
+        private const long MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1 GB
 
         public FilesController(DataShareDbContext context, IWebHostEnvironment environment, MyPasswordService passwordService)
         {
@@ -49,11 +26,10 @@ namespace DataShareBackend.Controllers
         }
 
         // POST: api/Files/upload
-      
-  
-        //Retourne l'ID du fichier et le lien de téléchargement
-     
 
+
+        //Retourne l'ID du fichier et le lien de téléchargement
+        //UploadFileDto DTO en entrée de la req / ! \ Penser a convertir la class Dto en variable locale
         [HttpPost("upload")]
         public async Task<ActionResult> UploadFile([FromForm] UploadFileDto fileDto)
         {
@@ -68,7 +44,7 @@ namespace DataShareBackend.Controllers
                 // Vérifier la taille du fichier
                 if (fileDto.File.Length > MAX_FILE_SIZE)
                 {
-                    return BadRequest(new { message = $"Le fichier est trop volumineux. Taille maximale : {MAX_FILE_SIZE / (1024 * 1024)} MB" });
+                    return BadRequest(new { message = $"Le fichier est trop volumineux. Taille maximale : {MAX_FILE_SIZE / (1024 * 1024 * 1024)} MB" }); // 1GB
                 }
 
                 // Vérifier que l'utilisateur existe bien
@@ -142,11 +118,11 @@ namespace DataShareBackend.Controllers
             }
         }
 
-        // GET: api/Files/download/{id}
-      
+        // GET: api/Files/download/{id}       Télécharger un fichier
 
-        [HttpGet("download/{id}")]
-        public async Task<ActionResult> DownloadFile(int id, [FromQuery] string? password)
+
+        [HttpPost("download/{id}")]
+        public async Task<ActionResult> DownloadFileSecure(int id, [FromBody] FileDownloadRequestDto request)
         {
             try
             {
@@ -154,38 +130,25 @@ namespace DataShareBackend.Controllers
                     .FirstOrDefaultAsync(f => f.Id == id && !f.Deleted);
 
                 if (fileRecord == null)
-                {
                     return NotFound(new { message = "Fichier introuvable ou supprimé" });
-                }
 
-                // Vérifier si le fichier est expiré
                 if (fileRecord.EndDate < DateTime.UtcNow)
-                {
                     return BadRequest(new { message = "Ce fichier a expiré" });
-                }
 
                 // Vérifier le mot de passe si nécessaire
                 if (!string.IsNullOrEmpty(fileRecord.FilePassword))
                 {
-                    if (string.IsNullOrEmpty(password))
-                    {
+                    if (string.IsNullOrEmpty(request.Password))
                         return Unauthorized(new { message = "Un mot de passe est requis pour télécharger ce fichier" });
-                    }
 
-                    var hashedPassword = _passwordService.HashPassword(password);
+                    var hashedPassword = _passwordService.HashPassword(request.Password);
                     if (fileRecord.FilePassword != hashedPassword)
-                    {
                         return Unauthorized(new { message = "Mot de passe incorrect" });
-                    }
                 }
 
-                // Récupérer le fichier
                 var filePath = Path.Combine(_environment.ContentRootPath, "uploads", fileRecord.FilePath ?? "");
-
                 if (!System.IO.File.Exists(filePath))
-                {
                     return NotFound(new { message = "Le fichier physique est introuvable sur le serveur" });
-                }
 
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(filePath, FileMode.Open))
@@ -193,22 +156,20 @@ namespace DataShareBackend.Controllers
                     await stream.CopyToAsync(memory);
                 }
                 memory.Position = 0;
-                //Ajout de la partie d'informations type Mime pour navigateur gérer par le serveur ASP.net
-                var provider = new FileExtensionContentTypeProvider();
 
+                var provider = new FileExtensionContentTypeProvider();
                 if (!provider.TryGetContentType(fileRecord.FileName, out var contentType))
-                {
                     contentType = "application/octet-stream";
-                }
 
                 return File(memory, contentType, fileRecord.FileName);
-                //Fin
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Erreur lors du téléchargement", error = ex.Message });
             }
         }
+
+    
 
         // GET: api/Files/{id}
 
@@ -247,8 +208,8 @@ namespace DataShareBackend.Controllers
             }
         }
 
-        // GET: api/Files/user/{userId}
-   
+        // GET: api/Files/user/{userId} = Liste de fichiers par utilisateurs
+
 
         [HttpGet("user/{userId}")]
         public async Task<ActionResult> GetUserFiles(int userId)
@@ -258,6 +219,8 @@ namespace DataShareBackend.Controllers
                 var files = await _context.Files
                     .Where(f => f.IdUser == userId && !f.Deleted)
                     .OrderByDescending(f => f.CreationDate)
+
+                    // Reconstruire ce que l'API va exposer
                     .Select(f => new
                     {
                         id = f.Id,
@@ -268,6 +231,7 @@ namespace DataShareBackend.Controllers
                         hasPassword = !string.IsNullOrEmpty(f.FilePassword),
                         downloadLink = $"{Request.Scheme}://{Request.Host}/api/Files/download/{f.Id}"
                     })
+                    
                     .ToListAsync();
 
                 return Ok(files);

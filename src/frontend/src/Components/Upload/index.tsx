@@ -53,9 +53,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const maxSize = 2000 * 1024 * 1024; // MAx 2 GB
+      const maxSize = 1024 * 1024 * 1024;
       if (file.size > maxSize) {
-        setError("Le fichier est trop volumineux. Taille maximale : 2000 MB");
+        setError("La taille des fichiers est limitée à 1 Go");
         setSelectedFile(null);
         return;
       }
@@ -179,11 +179,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+
     justifyContent: "center",
     alignItems: "center",
     zIndex: 1000,
-    backdropFilter: "blur(4px)",
   };
 
   const modalStyle: React.CSSProperties = {
@@ -233,16 +232,19 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px",
+    paddingRight: "36px",
     border: "1px solid #cbd5e0",
     borderRadius: "8px",
     fontSize: "1rem",
     fontFamily: theme.fonts.primary,
     transition: "border-color 0.3s ease",
+    boxSizing: "border-box",
   };
 
   const selectStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px",
+    paddingRight: "36px",
     border: "1px solid #cbd5e0",
     borderRadius: "8px",
     fontSize: "1rem",
@@ -251,9 +253,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     cursor: "pointer",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 12px center",
-    paddingRight: "36px",
+    boxSizing: "border-box",
   };
-
   const buttonStyleCopy: React.CSSProperties = {
     width: "100%",
     padding: "14px",
@@ -269,18 +270,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     marginTop: "8px",
   };
   const buttonStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "14px",
-    backgroundColor: isUploading ? "red" : isActive2 ? "orange" : isHover2 ? "blue" : "#2d3748",
-    color: "white",
-    border: "none",
+    display: "flex",
+    alignItems: "center",
+    height: "8vw",
+    minHeight: "36px",
+    maxHeight: "60px",
+    width: "50%",
+    padding: "8px 16px",
+    margin: "0 auto",
+
     borderRadius: "8px",
     fontSize: "1rem",
     fontWeight: 600,
-    cursor: isUploading ? "not-allowed" : "pointer",
+    cursor: "pointer",
     transition: "all 0.3s ease",
-    fontFamily: theme.fonts.primary,
-    marginTop: "8px",
+    border: "1px solid #CD5E1480",
+    backgroundColor: isUploading ? "red" : isActive2 ? "orange" : isHover2 ? "#f7ab79ff" : "#FF812D21",
+    color: isHover2 ? "#faf5f2ff" : "#CD5E1480",
   };
 
   const closeButtonStyle: React.CSSProperties = {
@@ -354,14 +360,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     backgroundColor: "#48bb78",
     width: `${uploadProgress}%`,
     transition: "width 0.3s ease",
-  };
-
-  const userStatusStyle: React.CSSProperties = {
-    fontSize: "0.85rem",
-    color: "#718096",
-    marginBottom: "16px",
-    textAlign: "center",
-    fontStyle: "italic",
   };
 
   /* ************************************************************ Rendu ************************************************************ */
@@ -454,6 +452,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
 
           {/* Boutons */}
           <button type="submit" style={buttonStyle} disabled={isUploading} onMouseEnter={() => setIsHover2(true)} onMouseLeave={() => setIsHover2(false)} onMouseDown={() => setIsActive2(true)} onMouseUp={() => setIsActive2(false)}>
+            {theme.logos?.UploadIcon && <theme.logos.UploadIcon size={80} color={isHover2 ? "#faf5f2ff" : "#CD5E1480"} />}
             {isUploading ? "⏳ Téléversement en cours..." : " Téléverser"}
           </button>
         </form>

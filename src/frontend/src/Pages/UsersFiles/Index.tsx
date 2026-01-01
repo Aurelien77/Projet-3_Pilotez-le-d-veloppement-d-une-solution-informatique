@@ -42,6 +42,9 @@ const Usersfiles: React.FC = () => {
   }, [files, filter, searchQuery]);
 
   /* ************************************************************ Fonctions ************************************************************ */
+  const HandleHome = () => {
+    navigate("/");
+  };
 
   const fetchUserFiles = async () => {
     try {
@@ -197,12 +200,13 @@ const Usersfiles: React.FC = () => {
     display: "flex",
     flexDirection: "column",
   };
-
+  const [hover, setHover] = React.useState(false);
   const logoStyle: React.CSSProperties = {
     fontSize: "1.5rem",
     fontWeight: 900,
     color: theme.colors.black,
     marginBottom: "40px",
+    cursor: hover ? "pointer" : "default",
   };
 
   const menuItemStyle: React.CSSProperties = {
@@ -425,7 +429,9 @@ const Usersfiles: React.FC = () => {
     <div style={pageContainer}>
       {/* Sidebar */}
       <aside style={sidebar}>
-        <h1 style={logoStyle}>DataShare</h1>
+        <h1 style={logoStyle} onClick={HandleHome} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          DataShare
+        </h1>
         <div style={menuItemStyle}>Mes fichiers</div>
         <div style={{ marginTop: "auto" }}>
           <p style={copyrightStyle}>Copyright DataShare© 2025</p>

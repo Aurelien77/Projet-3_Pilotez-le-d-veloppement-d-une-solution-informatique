@@ -20,7 +20,7 @@ builder.Services.AddDbContext<DataShareDbContext>(options =>
     options.LogTo(Console.WriteLine, LogLevel.Information);
 });
 
-// Configuration CORS (pour permettre les appels depuis un frontend)
+// Configuration CORS (pour permettre les appels depuis un frontend)  / ! \ Seul le démarrage du fronetend sur le prot 3000 est ici autorisé
 
 // ****************Ajout de  .AllowCredentials();  suite a erreur de cors depuis le frontend
 builder.Services.AddCors(options =>

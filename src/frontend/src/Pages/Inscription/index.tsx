@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
+import Header from "../../Components/Header/Index";
+import Footer from "../../Components/Footer/Index";
 
 /* ************************************************************ Typage ************************************************************ */
 
@@ -126,38 +128,6 @@ const Register: React.FC<InscriptionProps> = ({
     fontFamily: theme.fonts.primary,
     display: "flex",
     flexDirection: "column",
-  };
-
-  const headerStyle: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
-    flexShrink: 0,
-  };
-
-  const logoStyle: React.CSSProperties = {
-    fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
-    fontWeight: 900,
-    color: theme.colors.black,
-    letterSpacing: "-1px",
-    fontFamily: theme.fonts.primary,
-  };
-
-  const connectButtonStyle: React.CSSProperties = {
-    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
-    background: headerButtonHover ? "#1a202c" : "#2d3748",
-    color: theme.colors.white,
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "clamp(0.85rem, 2vw, 1rem)",
-    fontWeight: 500,
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    boxShadow: headerButtonHover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
-    fontFamily: theme.fonts.primary,
-    transform: headerButtonHover ? "translateY(-2px)" : "translateY(0)",
-    whiteSpace: "nowrap",
   };
 
   const mainContainerStyle: React.CSSProperties = {
@@ -363,18 +333,37 @@ const Register: React.FC<InscriptionProps> = ({
     display: errorMessage ? "block" : "none",
   };
 
+  /* ***********************  Header Style   * ********************** */
+  const logoStyle: React.CSSProperties = {
+    fontSize: "1.5rem",
+    fontWeight: 900,
+    color: theme.colors.black,
+    marginBottom: "40px",
+  };
+
+  const ButtonStyle: React.CSSProperties = {
+    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
+    background: headerButtonHover ? "#1a202c" : "#2d3748",
+    color: theme.colors.white,
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "clamp(0.85rem, 2vw, 1rem)",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    boxShadow: headerButtonHover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
+    fontFamily: theme.fonts.primary,
+    transform: headerButtonHover ? "translateY(-2px)" : "translateY(0)",
+    whiteSpace: "nowrap",
+  };
+  /* ***********************  Fin Header Style   * ********************** */
   /* ************************************************************ Render ************************************************************ */
 
   return (
     <>
       <div style={pageContainerStyle}>
         {/* Header */}
-        <header style={headerStyle}>
-          <h1 style={logoStyle}>{logoText}</h1>
-          <button style={connectButtonStyle} onClick={handleAlreadyAccount} onMouseEnter={() => setHeaderButtonHover(true)} onMouseLeave={() => setHeaderButtonHover(false)}>
-            Se connecter
-          </button>
-        </header>
+        <Header logoStyle={logoStyle} buttonStyle={ButtonStyle} />
 
         {/* Main  */}
         <main style={mainContainerStyle}>
@@ -484,11 +473,8 @@ const Register: React.FC<InscriptionProps> = ({
         </main>
 
         {/* Footer */}
-        <footer style={footerStyle}>
-          <p style={copyrightStyle}>{copyrightText}</p>
-        </footer>
+        <Footer copyrightText={copyrightText} containerStyle={footerStyle} textStyle={copyrightStyle} />
       </div>
-
       {/* Popup de succès */}
       <div style={popupOverlayStyle}>
         <div style={popupContainerStyle}>

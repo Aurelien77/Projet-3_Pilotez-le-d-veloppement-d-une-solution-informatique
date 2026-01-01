@@ -3,10 +3,7 @@ import { AuthProvider } from "./Helpers/AuthContext";
 //Import des pages
 
 import Login from "./Pages/Accueil/Index";
-import Profil from "./Pages/Profil/Index";
-import Televersement from "./Pages/Televersement/Index";
 import Default from "./Pages/Default/Index";
-
 import Connexion from "./Pages/Connexion/Index";
 import Register from "./Pages/Inscription";
 import Usersfiles from "./Pages/UsersFiles/Index";
@@ -21,13 +18,9 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profil" element={<Usersfiles />} />
-            <Route path="/Televersement" element={<Televersement />} />
             <Route path="/Connexion" element={<Connexion />} />
-
             <Route path="/Register" element={<Register />} />
-
             <Route path="/download/:fileId" element={<DowladdFile />} />
-
             <Route path="*" element={<Default />} />
           </Routes>
         </BrowserRouter>

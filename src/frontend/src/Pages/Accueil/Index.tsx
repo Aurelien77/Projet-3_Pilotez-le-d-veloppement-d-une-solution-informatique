@@ -3,6 +3,8 @@ import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
 import FileUpload from "../../Components/Upload";
 import { useAuth } from "../../Helpers/AuthContext";
+import Footer from "../../Components/Footer/Index";
+import Header from "../../Components/Header/Index";
 /* ************************************************************ Typage ************************************************************ */
 
 interface AccueilProps {
@@ -11,10 +13,9 @@ interface AccueilProps {
   gardeSubtitle?: string;
 
   /*   Page d'accueil */
-  logo?: string;
+
   question?: string;
   connectButton?: string;
-  copyright?: string;
 
   /* Typage de la transition */
   transitionDelay?: number;
@@ -26,11 +27,9 @@ const Accueil: React.FC<AccueilProps> = ({
   // Possible Props déclarées ici en dur
   gardeTitle = "DataShare",
   gardeSubtitle = "« Nous gardons vos fichiers en toute sécurité »",
-  logo = "DataShare",
   question = "Tu veux partager un fichier ?",
-  connectButton = "Se connecter",
-  copyright = "Copyright DataShare© 2025",
-  transitionDelay = 2500,
+
+  transitionDelay = 1500,
 }) => {
   /* ************************************************************ States ************************************************************ */
 
@@ -40,6 +39,8 @@ const Accueil: React.FC<AccueilProps> = ({
   const [isUploadOpen, setIsUploadModalOpen] = useState<boolean>(false);
 
   const [userId, setUserId] = useState<number | undefined>(undefined);
+
+  const [headerButtonHover, setHeaderButtonHover] = useState(false);
 
   /* ************************************************************ Effects ************************************************************ */
 
@@ -126,9 +127,30 @@ const Accueil: React.FC<AccueilProps> = ({
   const [hover, setHover] = React.useState(false);
   const [uploadHover2, setUploadHover2] = React.useState(false);
 
-  //******************************************Upload */
+  /* ***********************  Header Style   * ********************** */
+  const logoStyle: React.CSSProperties = {
+    fontSize: "1.5rem",
+    fontWeight: 900,
+    color: theme.colors.black,
+    marginBottom: "40px",
+  };
 
-  //*********************************** */
+  const ButtonStyle: React.CSSProperties = {
+    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
+    background: headerButtonHover ? "#1a202c" : "#2d3748",
+    color: theme.colors.white,
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "clamp(0.85rem, 2vw, 1rem)",
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    boxShadow: headerButtonHover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
+    fontFamily: theme.fonts.primary,
+    transform: headerButtonHover ? "translateY(-2px)" : "translateY(0)",
+    whiteSpace: "nowrap",
+  };
+  /* ***********************  Fin Header Style   * ********************** */
   const pageContainer: React.CSSProperties = {
     minHeight: "100vh",
     width: "100%",
@@ -225,6 +247,21 @@ const Accueil: React.FC<AccueilProps> = ({
 
     boxShadow: "none",
   };
+  /* ***********************  Footer Style   * ********************** */
+  const footerStyle: React.CSSProperties = {
+    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
+    flexShrink: 0,
+  };
+
+  const copyrightStyle: React.CSSProperties = {
+    fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+    color: theme.colors.white,
+    opacity: 0.8,
+    margin: 0,
+    fontFamily: theme.fonts.primary,
+  };
+
+  /* ***********************  Fin Footer Style   * ********************** */
 
   /* ************************************************************ Rendu ************************************************************ */
 
@@ -240,12 +277,7 @@ const Accueil: React.FC<AccueilProps> = ({
 
       {/*Page d'accueil  */}
       <div style={pageContainer}>
-        <header style={header}>
-          <h1 style={logostyle}>{logo}</h1>
-          <button style={connectButtonstyle} onClick={handleConnect} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-            {connectButton}
-          </button>
-        </header>
+        <Header logoStyle={logoStyle} buttonStyle={ButtonStyle} />
 
         <main style={mainContainer}>
           <h2 style={title}>{question}</h2>
@@ -253,7 +285,7 @@ const Accueil: React.FC<AccueilProps> = ({
           <div style={uploadButtonContainerStyle}>
             {/*      / ! \ Si un bouton est créé en dessous il herite d'une ombre porté. */}
             <div style={uploadButtonOuterStyle} onClick={handleFileUpload} onMouseEnter={() => setUploadHover2(true)} onMouseLeave={() => setUploadHover2(false)}>
-              <div style={uploadButtonInnerStyle}></div>
+              <div style={uploadButtonInnerStyle}>{theme.logos?.UploadIcon && <theme.logos.UploadIcon size={1200} color="white" />}</div>
             </div>
           </div>
         </main>
@@ -262,10 +294,7 @@ const Accueil: React.FC<AccueilProps> = ({
         {/*   Test : passage du composant en visible ou none au lieu d'un state dans le composant parent => A voir si cette approche complique l'étape des tests*/}
         <FileUpload isOpen={isUploadOpen} onClose={handleCloseModal} userId={userId} />
 
-        {/* Footer */}
-        <footer style={footer}>
-          <p style={copyrightstyle}>{copyright}</p>
-        </footer>
+        <Footer containerStyle={footerStyle} textStyle={copyrightStyle} />
       </div>
     </>
   );

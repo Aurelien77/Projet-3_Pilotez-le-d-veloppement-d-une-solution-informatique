@@ -3,7 +3,6 @@
 
 using DataShareBackend.DTO;   //Utilisation du dossier DTO
 using DataShareBackend.Models;  // Le model 
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;   //crée la logic route controller et si besoin une vue
 using Microsoft.EntityFrameworkCore;   //Logic ORM
 
@@ -234,17 +233,5 @@ namespace DataShareBackend.Controllers
         }
 
  
-
-        // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
