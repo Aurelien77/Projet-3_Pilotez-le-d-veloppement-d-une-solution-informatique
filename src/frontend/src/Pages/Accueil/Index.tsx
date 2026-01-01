@@ -285,7 +285,7 @@ const Accueil: React.FC<AccueilProps> = ({
           <div style={uploadButtonContainerStyle}>
             {/*      / ! \ Si un bouton est créé en dessous il herite d'une ombre porté. */}
             <div style={uploadButtonOuterStyle} onClick={handleFileUpload} onMouseEnter={() => setUploadHover2(true)} onMouseLeave={() => setUploadHover2(false)}>
-              <div style={uploadButtonInnerStyle}>{theme.logos?.UploadIcon && <theme.logos.UploadIcon size={1200} color="white" />}</div>
+              <div style={uploadButtonInnerStyle}>{theme.logos?.UploadIcon && <theme.logos.UploadIcon size={40} color="white" />}</div>
             </div>
           </div>
         </main>

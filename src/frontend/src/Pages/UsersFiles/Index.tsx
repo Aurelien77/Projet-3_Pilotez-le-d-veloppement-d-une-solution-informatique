@@ -28,7 +28,7 @@ const Usersfiles: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  const [hoverLogo, setHoverLogo] = useState(false);
   const userId = 8;
 
   /* ************************************************************ Effects ************************************************************ */
@@ -75,14 +75,12 @@ const Usersfiles: React.FC = () => {
   const applyFilters = () => {
     let result = [...files];
 
-    // Filtre par statut (Tous, Actifs, Expirés)
     if (filter === "active") {
       result = result.filter((file) => !file.isExpired);
     } else if (filter === "expired") {
       result = result.filter((file) => file.isExpired);
     }
 
-    // Filtre par recherche
     if (searchQuery.trim()) {
       result = result.filter((file) => file.fileName.toLowerCase().includes(searchQuery.toLowerCase()));
     }
@@ -96,37 +94,32 @@ const Usersfiles: React.FC = () => {
     }
 
     try {
-      const response = await fetch(
-        `https://localhost:7120/api/Files/${fileId}?userId=${userId}`,
-
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`https://localhost:7120/api/Files/${fileId}?userId=${userId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
 
       if (!response.ok) {
         throw new Error("Erreur lors de la suppression");
       }
 
-      // Retirer le fichier de la liste
       setFiles((prev) => prev.filter((file) => file.id !== fileId));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Erreur lors de la suppression");
     }
   };
 
-  const handleCopyLink = (downloadLink: string) => {
+  const handleCopyLink = (downloadLink: string, isExpired: boolean) => {
+    if (isExpired) {
+      alert("Ce lien a expiré, il ne peut plus être copié.");
+      return;
+    }
+
     navigator.clipboard.writeText(downloadLink);
     alert("Lien copié dans le presse-papiers !");
   };
 
   const handleAccess = () => {
-    // Rediriger vers la page de téléchargement
-
-    /*     const downloadLink = `https://localhost:7120/api/Files/download/8`;
-    window.open(downloadLink, "_blank"); */
-
     navigate(`/download/8`);
   };
 
@@ -149,34 +142,35 @@ const Usersfiles: React.FC = () => {
     }
   };
 
-  const getFileIcon = (fileName: string): string => {
+  const getFileIcon = (fileName: string): { icon: string; bgColor: string } => {
     const extension = fileName.split(".").pop()?.toLowerCase();
     switch (extension) {
       case "pdf":
-        return "📄";
+        return { icon: "📄", bgColor: "#FED7D7" };
       case "jpg":
       case "jpeg":
       case "png":
       case "gif":
-        return "🖼️";
+      case "webp":
+        return { icon: "🖼️", bgColor: "#C6F6D5" };
       case "mp4":
       case "avi":
       case "mov":
-        return "🎬";
+        return { icon: "🎬", bgColor: "#DDD6FE" };
       case "mp3":
       case "wav":
-        return "🎵";
+        return { icon: "🎵", bgColor: "#BFDBFE" };
       case "zip":
       case "rar":
-        return "📦";
+        return { icon: "📦", bgColor: "#FED7AA" };
       case "doc":
       case "docx":
-        return "📝";
+        return { icon: "📝", bgColor: "#FECACA" };
       case "xls":
       case "xlsx":
-        return "📊";
+        return { icon: "📊", bgColor: "#BAE6FD" };
       default:
-        return "📁";
+        return { icon: "📁", bgColor: "#E5E7EB" };
     }
   };
 
@@ -184,7 +178,7 @@ const Usersfiles: React.FC = () => {
 
   const pageContainer: React.CSSProperties = {
     minHeight: "100vh",
-    background: theme.gradients.main,
+    backgroundColor: "#F5E6D3",
     fontFamily: theme.fonts.primary,
   };
 
@@ -193,36 +187,39 @@ const Usersfiles: React.FC = () => {
     left: 0,
     top: 0,
     bottom: 0,
-    width: "240px",
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    width: "220px",
+    background: "linear-gradient(180deg, #FF9B73 0%, #FF7A57 50%, #FF6B4A 100%)",
     boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)",
     padding: "20px",
     display: "flex",
     flexDirection: "column",
   };
+
   const [hover, setHover] = React.useState(false);
+
   const logoStyle: React.CSSProperties = {
-    fontSize: "1.5rem",
+    fontSize: "1.8rem",
     fontWeight: 900,
-    color: theme.colors.black,
+    color: "white",
     marginBottom: "40px",
     cursor: hover ? "pointer" : "default",
   };
 
   const menuItemStyle: React.CSSProperties = {
-    padding: "12px 16px",
-    borderRadius: "8px",
-    backgroundColor: "#e2e8f0",
-    color: theme.colors.black,
+    padding: "14px 18px",
+    borderRadius: "12px",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    color: "white",
     cursor: "pointer",
     fontWeight: 600,
     marginBottom: "8px",
     transition: "all 0.3s ease",
+    backdropFilter: "blur(10px)",
   };
 
   const mainContent: React.CSSProperties = {
-    marginLeft: "240px",
-    padding: "20px 40px",
+    marginLeft: "220px",
+    padding: "30px 50px",
   };
 
   const header: React.CSSProperties = {
@@ -230,12 +227,13 @@ const Usersfiles: React.FC = () => {
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: "30px",
+    backgroundColor: "transparent",
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize: "2rem",
+    fontSize: "2.2rem",
     fontWeight: 700,
-    color: theme.colors.black,
+    color: "#2d3748",
   };
 
   const buttonGroupStyle: React.CSSProperties = {
@@ -243,8 +241,8 @@ const Usersfiles: React.FC = () => {
     gap: "12px",
   };
 
-  const buttonStyle: React.CSSProperties = {
-    padding: "10px 20px",
+  const addButtonStyle: React.CSSProperties = {
+    padding: "12px 24px",
     backgroundColor: "#2d3748",
     color: "white",
     border: "none",
@@ -256,130 +254,184 @@ const Usersfiles: React.FC = () => {
     fontFamily: theme.fonts.primary,
   };
 
+  const logoutButtonStyle: React.CSSProperties = {
+    padding: "12px 24px",
+    backgroundColor: "transparent",
+    color: "#FF812D",
+    border: "2px solid #FF812D",
+    borderRadius: "8px",
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    fontFamily: theme.fonts.primary,
+  };
+
   const filterContainer: React.CSSProperties = {
-    backgroundColor: "white",
-    borderRadius: "12px",
-    padding: "20px",
+    backgroundColor: "transparent",
     marginBottom: "24px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   };
 
   const filterTabsStyle: React.CSSProperties = {
     display: "flex",
-    gap: "8px",
+    gap: "0px",
     marginBottom: "16px",
+    backgroundColor: "white",
+    padding: "4px",
+    borderRadius: "50px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+    width: "fit-content",
   };
 
   const filterTabStyle = (isActive: boolean): React.CSSProperties => ({
-    padding: "8px 20px",
-    backgroundColor: isActive ? "#2d3748" : "#e2e8f0",
-    color: isActive ? "white" : theme.colors.black,
+    padding: "10px 28px",
+    backgroundColor: isActive ? "#E07856" : "transparent",
+    color: isActive ? "white" : "#2d3748",
+    border: "none",
+    borderRadius: "50px 10px 10px 50px",
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    fontFamily: theme.fonts.primary,
+    whiteSpace: "nowrap",
+  });
+
+  const filterTabStyleActif = (isActive: boolean): React.CSSProperties => ({
+    ...filterTabStyle(isActive),
+    borderRadius: "10px 10px 10px 10px",
+  });
+
+  const filterTabStyleExpire = (isActive: boolean): React.CSSProperties => ({
+    ...filterTabStyle(isActive),
+    borderRadius: "10px 50px 50px 10px",
+  });
+
+  const searchInputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "14px 16px",
+    border: "1px solid #E0E0E0",
+    borderRadius: "10px",
+    fontSize: "1rem",
+    fontFamily: theme.fonts.primary,
+    backgroundColor: "white",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+  };
+
+  const filesContainer: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px",
+  };
+
+  const fileCardStyle: React.CSSProperties = {
+    backgroundColor: "white",
+    borderRadius: "16px",
+    padding: "20px 24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+    transition: "all 0.3s ease",
+    cursor: hover ? "pointer" : "none",
+  };
+
+  const fileInfoStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "18px",
+    flex: 1,
+  };
+
+  const fileIconContainerStyle = (bgColor: string): React.CSSProperties => ({
+    width: "52px",
+    height: "52px",
+    borderRadius: "10px",
+    backgroundColor: bgColor,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "1.6rem",
+  });
+
+  const fileDetailsStyle: React.CSSProperties = {
+    flex: 1,
+  };
+
+  const fileNameContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "6px",
+    flexWrap: "wrap",
+  };
+
+  const fileNameStyle: React.CSSProperties = {
+    fontSize: "1.05rem",
+    fontWeight: 600,
+    color: "#2d3748",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    maxWidth: "300px",
+  };
+
+  const fileMetaStyle: React.CSSProperties = {
+    fontSize: "0.9rem",
+    color: "#718096",
+  };
+
+  const fileActionsStyle: React.CSSProperties = {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+  };
+
+  const actionButtonStyle: React.CSSProperties = {
+    padding: "10px 18px",
     border: "none",
     borderRadius: "8px",
     fontSize: "0.9rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.3s ease",
-  });
-
-  const searchInputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "12px",
-    border: "1px solid #cbd5e0",
-    borderRadius: "8px",
-    fontSize: "1rem",
-    fontFamily: theme.fonts.primary,
-  };
-
-  const filesContainer: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  };
-
-  const fileCardStyle: React.CSSProperties = {
-    backgroundColor: "white",
-    borderRadius: "12px",
-    padding: "16px 20px",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-    transition: "all 0.3s ease",
-  };
-
-  const fileInfoStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    flex: 1,
-  };
-
-  const fileIconStyle: React.CSSProperties = {
-    fontSize: "2rem",
-  };
-
-  const fileDetailsStyle: React.CSSProperties = {
-    flex: 1,
-  };
-
-  const fileNameStyle: React.CSSProperties = {
-    fontSize: "1rem",
-    fontWeight: 600,
-    color: theme.colors.black,
-    marginBottom: "4px",
-  };
-
-  const fileMetaStyle: React.CSSProperties = {
-    fontSize: "0.85rem",
-    color: "#718096",
-  };
-
-  const fileActionsStyle: React.CSSProperties = {
-    display: "flex",
-    gap: "8px",
-  };
-
-  const actionButtonStyle: React.CSSProperties = {
-    padding: "8px 16px",
-    border: "none",
-    borderRadius: "6px",
-    fontSize: "0.85rem",
-    fontWeight: 600,
-    cursor: "pointer",
-    transition: "all 0.3s ease",
+    gap: "6px",
   };
 
   const deleteButtonStyle: React.CSSProperties = {
     ...actionButtonStyle,
-    backgroundColor: "#fc8181",
-    color: "white",
+    backgroundColor: "#FFB3B3",
+    color: "#C53030",
+    border: "1px solid #FFA0A0",
   };
 
   const copyButtonStyle: React.CSSProperties = {
     ...actionButtonStyle,
-    backgroundColor: "#4299e1",
+    backgroundColor: "#5DADE2",
     color: "white",
   };
-  const copyrightStyle: React.CSSProperties = {
-    fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
-    color: theme.colors.black,
-    opacity: 0.8,
-    margin: 0,
-    fontFamily: theme.fonts.primary,
-  };
+
   const accessButtonStyle: React.CSSProperties = {
     ...actionButtonStyle,
-    backgroundColor: "#48bb78",
+    backgroundColor: "#6BCF95",
     color: "white",
+  };
+
+  const copyrightStyle: React.CSSProperties = {
+    fontSize: "0.85rem",
+    color: "rgba(255, 255, 255, 0.9)",
+    margin: 0,
+    fontFamily: theme.fonts.primary,
   };
 
   const emptyStateStyle: React.CSSProperties = {
     textAlign: "center",
     padding: "60px 20px",
     backgroundColor: "white",
-    borderRadius: "12px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    borderRadius: "16px",
+    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
   };
 
   const loadingStyle: React.CSSProperties = {
@@ -397,30 +449,31 @@ const Usersfiles: React.FC = () => {
   const FolderStyleText: React.CSSProperties = {
     fontSize: "1.5rem",
     marginBottom: "16px",
+    color: "#2d3748",
   };
 
   const errorStyle: React.CSSProperties = {
     backgroundColor: "#fed7d7",
     color: "#c53030",
     padding: "16px",
-    borderRadius: "8px",
+    borderRadius: "12px",
     marginBottom: "20px",
     textAlign: "center",
   };
 
   const statusBadgeStyle = (isExpired: boolean): React.CSSProperties => ({
     display: "inline-block",
-    padding: "4px 12px",
-    borderRadius: "12px",
-    fontSize: "0.75rem",
+    padding: "6px 16px",
+    borderRadius: "8px",
+    fontSize: "0.8rem",
     fontWeight: 600,
-    backgroundColor: isExpired ? "#fed7d7" : "#c6f6d5",
-    color: isExpired ? "#c53030" : "#22543d",
-    marginLeft: "8px",
+    backgroundColor: isExpired ? "#FFEBEE" : "#E8F5E9",
+    color: isExpired ? "#D32F2F" : "#388E3C",
+    border: `1px solid ${isExpired ? "#FFCDD2" : "#C8E6C9"}`,
   });
 
   const lockIconStyle: React.CSSProperties = {
-    marginLeft: "8px",
+    fontSize: "1rem",
   };
 
   /* ************************************************************ Rendu ************************************************************ */
@@ -444,15 +497,10 @@ const Usersfiles: React.FC = () => {
         <div style={header}>
           <h2 style={titleStyle}>Mes fichiers</h2>
           <div style={buttonGroupStyle}>
-            <button style={buttonStyle} onClick={() => navigate("/")}>
+            <button style={addButtonStyle} onClick={() => navigate("/")}>
               Ajouter des fichiers
             </button>
-            <button
-              style={{ ...buttonStyle, backgroundColor: "#e2e8f0", color: theme.colors.black }}
-              onClick={() => {
-                navigate("/");
-              }}
-            >
+            <button style={logoutButtonStyle} onClick={() => navigate("/")}>
               🔓 Déconnexion
             </button>
           </div>
@@ -467,13 +515,17 @@ const Usersfiles: React.FC = () => {
             <button style={filterTabStyle(filter === "all")} onClick={() => setFilter("all")}>
               Tous
             </button>
-            <button style={filterTabStyle(filter === "active")} onClick={() => setFilter("active")}>
+            <button style={filterTabStyleActif(filter === "active")} onClick={() => setFilter("active")}>
               Actifs
             </button>
-            <button style={filterTabStyle(filter === "expired")} onClick={() => setFilter("expired")}>
+            <button style={filterTabStyleExpire(filter === "expired")} onClick={() => setFilter("expired")}>
               Expiré
             </button>
           </div>
+        </div>
+
+        {/* Barre de recherche */}
+        <div style={{ marginBottom: "24px" }}>
           <input type="text" placeholder="Rechercher un fichier..." style={searchInputStyle} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </div>
 
@@ -488,39 +540,36 @@ const Usersfiles: React.FC = () => {
           </div>
         ) : (
           <div style={filesContainer}>
-            {filteredFiles.map((file) => (
-              <div key={file.id} style={fileCardStyle}>
-                <div style={fileInfoStyle}>
-                  <span style={fileIconStyle}>{getFileIcon(file.fileName)}</span>
-                  <div style={fileDetailsStyle}>
-                    <div style={fileNameStyle}>
-                      {file.fileName}
-                      {file.hasPassword && <span style={lockIconStyle}>🔒</span>}
-                      <span style={statusBadgeStyle(file.isExpired)}>{file.isExpired ? "Expiré" : "Actif"}</span>
-                    </div>
-                    <div style={fileMetaStyle}>
-                      {formatDate(file.expirationDate)}
-                      {file.isExpired && <span> • Ce fichier a expiré. Il n'est plus stocké chez nous</span>}
+            {filteredFiles.map((file) => {
+              const { icon, bgColor } = getFileIcon(file.fileName);
+              return (
+                <div key={file.id} style={fileCardStyle} onClick={() => handleCopyLink(file.downloadLink, file.isExpired)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                  <div style={fileInfoStyle}>
+                    <div style={fileIconContainerStyle(bgColor)}>{icon}</div>
+                    <div style={fileDetailsStyle}>
+                      <div style={fileNameContainerStyle}>
+                        <span style={fileNameStyle}>{file.fileName}</span>
+                        {file.hasPassword && <span style={lockIconStyle}>🔒</span>}
+                        <span style={statusBadgeStyle(file.isExpired)}>{file.isExpired ? "Expiré" : "Actif"}</span>
+                      </div>
+                      <div style={fileMetaStyle}>{file.isExpired ? "Expiré • Ce fichier à expiré. Il n'est plus stocké chez nous" : formatDate(file.expirationDate)}</div>
                     </div>
                   </div>
-                </div>
-                <div style={fileActionsStyle}>
-                  {!file.isExpired && (
-                    <>
-                      <button style={copyButtonStyle} onClick={() => handleCopyLink(file.downloadLink)} title="Copier le lien">
-                        📋
-                      </button>
-                      <button style={accessButtonStyle} onClick={() => handleAccess()} title="Accéder">
-                        Accéder →
-                      </button>
-                    </>
-                  )}
                   <button style={deleteButtonStyle} onClick={() => handleDelete(file.id)} title="Supprimer">
                     🗑️ Supprimer
                   </button>
+                  <div style={fileActionsStyle}>
+                    {!file.isExpired && (
+                      <>
+                        <button style={accessButtonStyle} onClick={() => handleAccess()} title="Accéder">
+                          Accéder →
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>

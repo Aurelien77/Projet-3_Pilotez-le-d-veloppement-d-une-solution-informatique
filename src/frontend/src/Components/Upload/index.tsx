@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import theme from "../../Config/Themes/Index";
 import { useAuth } from "../../Helpers/AuthContext";
+
 /* ************************************************************ Typage ************************************************************ */
 
 interface FileUploadProps {
   isOpen: boolean;
   onClose: () => void;
-  userId?: number; // ID de l'utilisateur
+  userId?: number;
 }
 
 interface UploadResponse {
@@ -33,21 +34,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const [success, setSuccess] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-
   const [downloadLink, setDownloadLink] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string>("");
+  const [uploadedFileSize, setUploadedFileSize] = useState<number>(0);
 
-  //Styles
-
+  // Styles hover states
   const [isHover, setIsHover] = useState(false);
   const [isHover2, setIsHover2] = useState(false);
-  const [isHoverClose, setIsHoverClose] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
-  const [isActiveClose, setIsActiveClose] = useState(false);
-
-  // Austate context
 
   const { authState } = useAuth();
+
   /* ************************************************************ Fonctions ************************************************************ */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +75,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     return endDate.toISOString();
   };
 
+  const getExpirationText = (days: number): string => {
+    if (days === 1) return "une journée";
+    if (days === 3) return "3 jours";
+    if (days === 7) return "une semaine";
+    if (days === 14) return "2 semaines";
+    if (days === 30) return "un mois";
+    return `${days} jours`;
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -94,20 +101,16 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
       const formData = new FormData();
       formData.append("File", selectedFile);
 
-      // Si l'utilisateur est connecté, utiliser son ID, sinon ID 8 (invité)
       const userIdToSend = authState.id || 8;
       formData.append("IdUser", userIdToSend.toString());
 
-      // Calculer la date de fin
       const endDate = calculateEndDate(expirationDays);
       formData.append("EndDate", endDate);
 
-      // Ajouter le mot de passe si fourni
       if (password.trim()) {
         formData.append("FilePassword", password);
       }
 
-      // Simulation de progression
       const progressInterval = setInterval(() => {
         setUploadProgress((prev) => {
           if (prev >= 90) {
@@ -118,11 +121,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
         });
       }, 200);
 
-      // Envoi de la requête
       const response = await fetch("https://localhost:7120/api/Files/upload", {
         method: "POST",
         body: formData,
-        credentials: "include", // Pour inclure les cookies JWT
+        credentials: "include",
       });
 
       clearInterval(progressInterval);
@@ -135,11 +137,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
 
       const data: UploadResponse = await response.json();
 
-      //Mettre le lien dans un state
-
       setDownloadLink(data.downloadLink);
-      // Succès
-      setSuccess(`Fichier uploadé avec succès ! Lien : ${data.downloadLink}`);
+      setUploadedFileName(selectedFile.name);
+      setUploadedFileSize(selectedFile.size);
+      setSuccess("Fichier uploadé avec succès !");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
       setUploadProgress(0);
@@ -155,6 +156,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     setError("");
     setSuccess("");
     setUploadProgress(0);
+    setDownloadLink(null);
+    setUploadedFileName("");
+    setUploadedFileSize(0);
   };
 
   const handleClose = () => {
@@ -179,7 +183,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     left: 0,
     right: 0,
     bottom: 0,
-
     justifyContent: "center",
     alignItems: "center",
     zIndex: 1000,
@@ -222,7 +225,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     cursor: "pointer",
     transition: "all 0.3s ease",
     backgroundColor: selectedFile ? "#f7fafc" : "#ffffff",
-    width: "100vw",
   };
 
   const fileInputStyle: React.CSSProperties = {
@@ -232,7 +234,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px",
-    paddingRight: "36px",
     border: "1px solid #cbd5e0",
     borderRadius: "8px",
     fontSize: "1rem",
@@ -244,80 +245,55 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const selectStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px",
-    paddingRight: "36px",
     border: "1px solid #cbd5e0",
     borderRadius: "8px",
     fontSize: "1rem",
     fontFamily: theme.fonts.primary,
     transition: "border-color 0.3s ease",
     cursor: "pointer",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 12px center",
     boxSizing: "border-box",
   };
-  const buttonStyleCopy: React.CSSProperties = {
-    width: "100%",
-    padding: "14px",
-    backgroundColor: isUploading ? "#a0aec0" : isActive ? "orange" : isHover ? "red" : "#2d3748",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "1rem",
-    fontWeight: 600,
-    cursor: isUploading ? "not-allowed" : "pointer",
-    transition: "all 0.3s ease",
-    fontFamily: theme.fonts.primary,
-    marginTop: "8px",
-  };
+
   const buttonStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    height: "8vw",
-    minHeight: "36px",
-    maxHeight: "60px",
-    width: "50%",
-    padding: "8px 16px",
-    margin: "0 auto",
-
+    justifyContent: "center",
+    gap: "8px",
+    height: "auto",
+    minHeight: "48px",
+    width: "100%",
+    padding: "12px 16px",
     borderRadius: "8px",
     fontSize: "1rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.3s ease",
     border: "1px solid #CD5E1480",
-    backgroundColor: isUploading ? "red" : isActive2 ? "orange" : isHover2 ? "#f7ab79ff" : "#FF812D21",
+    backgroundColor: isUploading ? "#cbd5e0" : isActive2 ? "orange" : isHover2 ? "#f7ab79ff" : "#FF812D21",
     color: isHover2 ? "#faf5f2ff" : "#CD5E1480",
   };
 
-  const closeButtonStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "14px",
+  const copyButtonStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    padding: "12px 24px",
+    backgroundColor: isActive ? "#e67e22" : isHover ? "#f39c12" : "#FF812D",
     color: "white",
     border: "none",
     borderRadius: "8px",
     fontSize: "1rem",
     fontWeight: 600,
-    cursor: isUploading ? "not-allowed" : "pointer",
+    cursor: "pointer",
     transition: "all 0.3s ease",
     fontFamily: theme.fonts.primary,
-    marginTop: "8px",
-
-    backgroundColor: isActiveClose ? "orange" : isHoverClose ? "blue" : "#2d3748",
+    marginTop: "16px",
   };
 
   const errorStyle: React.CSSProperties = {
     backgroundColor: "#fed7d7",
     color: "#c53030",
-    padding: "12px",
-    borderRadius: "8px",
-    marginBottom: "16px",
-    fontSize: "0.9rem",
-    textAlign: "center",
-  };
-
-  const successStyle: React.CSSProperties = {
-    backgroundColor: "#c6f6d5",
-    color: "#22543d",
     padding: "12px",
     borderRadius: "8px",
     marginBottom: "16px",
@@ -362,6 +338,42 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     transition: "width 0.3s ease",
   };
 
+  const successContainerStyle: React.CSSProperties = {
+    textAlign: "center",
+    padding: "20px 0",
+  };
+
+  const fileIconContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    backgroundColor: "#f7fafc",
+    padding: "16px",
+    borderRadius: "8px",
+    marginBottom: "20px",
+  };
+
+  const congratsTextStyle: React.CSSProperties = {
+    fontSize: "1rem",
+    color: "#2d3748",
+    marginBottom: "20px",
+    lineHeight: "1.5",
+  };
+
+  const linkContainerStyle: React.CSSProperties = {
+    backgroundColor: "#f7fafc",
+    padding: "12px",
+    borderRadius: "8px",
+    marginBottom: "16px",
+    wordBreak: "break-all",
+  };
+
+  const linkStyle: React.CSSProperties = {
+    color: "#FF812D",
+    textDecoration: "underline",
+    fontSize: "0.95rem",
+  };
+
   /* ************************************************************ Rendu ************************************************************ */
 
   if (!isOpen) return null;
@@ -371,91 +383,116 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         <h2 style={titleStyle}>Ajouter un fichier</h2>
 
-        {/* Messages d'erreur | succès */}
-        {error && <div style={errorStyle}>{error}</div>}
-        {success && <div style={successStyle}>{success}</div>}
-        {success && (
-          <button type="button" style={closeButtonStyle} onClick={handleClose} onMouseEnter={() => setIsHoverClose(true)} onMouseLeave={() => setIsHoverClose(false)} onMouseDown={() => setIsActiveClose(true)} onMouseUp={() => setIsActiveClose(false)}>
-            Fermer
-          </button>
-        )}
+        {/* Vue de succès */}
+        {success && downloadLink ? (
+          <div style={successContainerStyle}>
+            {/* Info du fichier avec icône */}
+            <div style={fileIconContainerStyle}>
+              <div style={{ fontSize: "2rem" }}>🖼️</div>
+              <div style={{ flex: 1, textAlign: "left" }}>
+                <div style={{ fontWeight: 600, marginBottom: "4px" }}>{uploadedFileName}</div>
+                <div style={{ fontSize: "0.85rem", color: "#718096" }}>{formatFileSize(uploadedFileSize)}</div>
+              </div>
+            </div>
 
-        <form onSubmit={handleSubmit}>
-          {/* Sélection du fichier */}
-          <div style={formGroupStyle}>
-            <input type="file" id="fileInput" style={fileInputStyle} onChange={handleFileChange} disabled={isUploading} />
-            <label htmlFor="fileInput" style={fileInputContainerStyle}>
-              {selectedFile ? (
-                <div style={fileInfoStyle}>
-                  <div style={{ flex: 1, textAlign: "left" }}>
-                    <div style={{ fontWeight: 600, marginBottom: "4px" }}>{selectedFile.name}</div>
-                    <div style={{ fontSize: "0.85rem", color: "#718096" }}>{formatFileSize(selectedFile.size)}</div>
-                  </div>
-                  <button
-                    type="button"
-                    style={removeButtonStyle}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRemoveFile();
-                    }}
-                  >
-                    Changer
-                  </button>
+            {/* Message de félicitations */}
+            <div style={congratsTextStyle}>Félicitations, ton fichier sera conservé chez nous pendant {getExpirationText(expirationDays)} !</div>
+
+            {/* Lien de téléchargement */}
+            <div style={linkContainerStyle}>
+              <a href={downloadLink} target="_blank" rel="noopener noreferrer" style={linkStyle}>
+                {downloadLink}
+              </a>
+            </div>
+
+            {/* Bouton copier */}
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(downloadLink);
+              }}
+              style={copyButtonStyle}
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+              onMouseDown={() => setIsActive(true)}
+              onMouseUp={() => setIsActive(false)}
+            >
+              📋 Copier le lien
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* Messages d'erreur */}
+            {error && <div style={errorStyle}>{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              {/* Sélection du fichier */}
+              <div style={formGroupStyle}>
+                <input type="file" id="fileInput" style={fileInputStyle} onChange={handleFileChange} disabled={isUploading} />
+                <label htmlFor="fileInput" style={fileInputContainerStyle}>
+                  {selectedFile ? (
+                    <div style={fileInfoStyle}>
+                      <div style={{ flex: 1, textAlign: "left" }}>
+                        <div style={{ fontWeight: 600, marginBottom: "4px" }}>{selectedFile.name}</div>
+                        <div style={{ fontSize: "0.85rem", color: "#718096" }}>{formatFileSize(selectedFile.size)}</div>
+                      </div>
+                      <button
+                        type="button"
+                        style={removeButtonStyle}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemoveFile();
+                        }}
+                      >
+                        Changer
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📁</div>
+                      <div style={{ fontWeight: 600, marginBottom: "4px" }}>Cliquez pour sélectionner un fichier</div>
+                    </>
+                  )}
+                </label>
+              </div>
+
+              {/* Mot de passe */}
+              <div style={formGroupStyle}>
+                <label style={labelStyle} htmlFor="password">
+                  Mot de passe
+                </label>
+                <input type="password" id="password" style={inputStyle} placeholder="Optionnel" value={password} onChange={(e) => setPassword(e.target.value)} disabled={isUploading} />
+              </div>
+
+              {/* Durée d'expiration */}
+              <div style={formGroupStyle}>
+                <label style={labelStyle} htmlFor="expiration">
+                  Expiration *
+                </label>
+                <select id="expiration" style={selectStyle} value={expirationDays} onChange={(e) => setExpirationDays(Number(e.target.value))} disabled={isUploading}>
+                  <option value={1}>Une journée</option>
+                  <option value={3}>3 jours</option>
+                  <option value={7}>Une semaine</option>
+                  <option value={14}>2 semaines</option>
+                  <option value={30}>Un mois</option>
+                </select>
+              </div>
+
+              {/* Barre de progression */}
+              {isUploading && (
+                <div style={progressBarContainerStyle}>
+                  <div style={progressBarStyle}></div>
                 </div>
-              ) : (
-                <>
-                  <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📁</div>
-                  <div style={{ fontWeight: 600, marginBottom: "4px" }}>Cliquez pour sélectionner un fichier</div>
-                </>
               )}
-            </label>
-          </div>
-          {/* Copier le lien */}
 
-          {downloadLink && (
-            <div style={{ marginTop: "12px", textAlign: "center" }}>
-              <input type="text" value={downloadLink} readOnly style={inputStyle} />
-
-              <button type="button" onClick={() => navigator.clipboard.writeText(downloadLink)} style={buttonStyleCopy} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} onMouseDown={() => setIsActive(true)} onMouseUp={() => setIsActive(false)}>
-                📋 Copier le lien
+              {/* Bouton téléverser */}
+              <button type="submit" style={buttonStyle} disabled={isUploading} onMouseEnter={() => setIsHover2(true)} onMouseLeave={() => setIsHover2(false)} onMouseDown={() => setIsActive2(true)} onMouseUp={() => setIsActive2(false)}>
+                {theme.logos?.UploadIcon && <theme.logos.UploadIcon size={20} color={isHover2 ? "#faf5f2ff" : "#CD5E1480"} />}
+                {isUploading ? "⏳ Téléversement en cours..." : "Téléverser"}
               </button>
-            </div>
-          )}
-          {/* Mot de passe */}
-          <div style={formGroupStyle}>
-            <label style={labelStyle} htmlFor="password">
-              Mot de passe
-            </label>
-            <input type="password" id="password" style={inputStyle} placeholder="Optionnel" value={password} onChange={(e) => setPassword(e.target.value)} disabled={isUploading} />
-          </div>
-
-          {/* Durée d'expiration */}
-          <div style={formGroupStyle}>
-            <label style={labelStyle} htmlFor="expiration">
-              Expiration *
-            </label>
-            <select id="expiration" style={selectStyle} value={expirationDays} onChange={(e) => setExpirationDays(Number(e.target.value))} disabled={isUploading}>
-              <option value={1}>Une journée</option>
-              <option value={3}>3 jours</option>
-              <option value={7}>Une semaine</option>
-              <option value={14}>2 semaines</option>
-              <option value={30}>Un mois</option>
-            </select>
-          </div>
-
-          {/* Barre de progression */}
-          {isUploading && (
-            <div style={progressBarContainerStyle}>
-              <div style={progressBarStyle}></div>
-            </div>
-          )}
-
-          {/* Boutons */}
-          <button type="submit" style={buttonStyle} disabled={isUploading} onMouseEnter={() => setIsHover2(true)} onMouseLeave={() => setIsHover2(false)} onMouseDown={() => setIsActive2(true)} onMouseUp={() => setIsActive2(false)}>
-            {theme.logos?.UploadIcon && <theme.logos.UploadIcon size={80} color={isHover2 ? "#faf5f2ff" : "#CD5E1480"} />}
-            {isUploading ? "⏳ Téléversement en cours..." : " Téléverser"}
-          </button>
-        </form>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ export const theme: Theme = {
   },
   logos: {
     UploadIcon: ({ size = 100, color = "white" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width={size} height={size}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="34 42 32 23" width={size} height={size}>
         <path
           d="M 35 55
              C 35 52, 37 50, 40 50
