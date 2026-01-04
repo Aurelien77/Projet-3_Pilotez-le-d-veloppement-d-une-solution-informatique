@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import theme from "../../Config/Themes/Index";
 import { useAuth } from "../../Helpers/AuthContext";
-
+import { ReactComponent as UploadIcon } from "../../Logo2.svg";
 /* ************************************************************ Typage ************************************************************ */
 
 interface FileUploadProps {
@@ -45,7 +45,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   const [isActive2, setIsActive2] = useState(false);
 
   const { authState } = useAuth();
-
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
   /* ************************************************************ Fonctions ************************************************************ */
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,6 +198,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     overflowY: "auto",
     boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
     fontFamily: theme.fonts.primary,
+    marginTop: isMobile ? "100%" : "0px",
   };
 
   const titleStyle: React.CSSProperties = {
@@ -210,6 +211,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
 
   const formGroupStyle: React.CSSProperties = {
     marginBottom: "20px",
+    width: "90%",
   };
 
   const labelStyle: React.CSSProperties = {
@@ -218,6 +220,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     fontSize: "0.95rem",
     fontWeight: 500,
     color: theme.colors.black,
+    width: "80%",
   };
 
   const fileInputContainerStyle: React.CSSProperties = {
@@ -261,30 +264,33 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     gap: "8px",
     height: "auto",
     minHeight: "48px",
-    width: "100%",
+    maxHeight: "50px",
+    width: isMobile ? "None" : "30%",
+    maxWidth: "100%",
+
     padding: "12px 16px",
     borderRadius: "8px",
     fontSize: "1rem",
-    fontWeight: 600,
+    fontWeight: 100,
     cursor: "pointer",
     transition: "all 0.3s ease",
-    border: "1px solid #CD5E1480",
-    backgroundColor: isUploading ? "#cbd5e0" : isActive2 ? "orange" : isHover2 ? "#f7ab79ff" : "#FF812D21",
-    color: isHover2 ? "#faf5f2ff" : "#CD5E1480",
+    border: "1px solid rgba(205, 94, 20, 0.5)",
+    backgroundColor: isUploading ? "" : isActive2 ? "orange" : isHover2 ? "#f7ab79ff" : "#FF812D21",
+    color: isHover2 ? "#faf5f2ff" : "rgba(205, 94, 20)",
   };
 
   const copyButtonStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width: "52%",
     gap: "8px",
     padding: "12px 24px",
-    backgroundColor: isActive ? "#e67e22" : isHover ? "#f39c12" : "#FF812D",
-    color: "white",
-    border: "none",
+    backgroundColor: isActive ? "rgba(255, 129, 45, 0.5)" : isHover ? "rgba(255, 129, 45, 0.3)" : "rgba(255, 129, 45, 0.13)",
+    color: "#CD5E14",
+    border: "1px solid rgba(205, 94, 20, 0.5)",
     borderRadius: "8px",
     fontSize: "1rem",
-    fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.3s ease",
     fontFamily: theme.fonts.primary,
@@ -305,16 +311,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#edf2f7",
+
     padding: "12px",
     borderRadius: "8px",
     marginTop: "8px",
   };
 
   const removeButtonStyle: React.CSSProperties = {
-    backgroundColor: "#fc8181",
-    color: "white",
-    border: "none",
+    color: "#FFA569",
+    border: "1px solid #FFA569",
     borderRadius: "6px",
     padding: "6px 12px",
     cursor: "pointer",
@@ -339,6 +344,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
   };
 
   const successContainerStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     textAlign: "center",
     padding: "20px 0",
   };
@@ -351,6 +359,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     padding: "16px",
     borderRadius: "8px",
     marginBottom: "20px",
+    width: "100%",
   };
 
   const congratsTextStyle: React.CSSProperties = {
@@ -358,6 +367,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     color: "#2d3748",
     marginBottom: "20px",
     lineHeight: "1.5",
+    textAlign: "left",
+    width: "100%",
   };
 
   const linkContainerStyle: React.CSSProperties = {
@@ -366,12 +377,31 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
     borderRadius: "8px",
     marginBottom: "16px",
     wordBreak: "break-all",
+    textAlign: "left",
+    width: "100%",
   };
 
   const linkStyle: React.CSSProperties = {
     color: "#FF812D",
     textDecoration: "underline",
     fontSize: "0.95rem",
+  };
+
+  const FormStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  const uploadIconStyle: React.CSSProperties = {
+    width: "clamp(4vw, 4vw, 2vw)",
+    height: "clamp(1vw, 4vw, 1.5vw)",
+  };
+
+  const uploadIconStyleMobile: React.CSSProperties = {
+    width: "clamp(6vw, 4vw, 2vw)",
+    height: "clamp(6vw, 4vw, 3vw)",
   };
 
   /* ************************************************************ Rendu ************************************************************ */
@@ -425,7 +455,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
             {/* Messages d'erreur */}
             {error && <div style={errorStyle}>{error}</div>}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={FormStyle}>
               {/* Sélection du fichier */}
               <div style={formGroupStyle}>
                 <input type="file" id="fileInput" style={fileInputStyle} onChange={handleFileChange} disabled={isUploading} />
@@ -434,7 +464,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
                     <div style={fileInfoStyle}>
                       <div style={{ flex: 1, textAlign: "left" }}>
                         <div style={{ fontWeight: 600, marginBottom: "4px" }}>{selectedFile.name}</div>
-                        <div style={{ fontSize: "0.85rem", color: "#718096" }}>{formatFileSize(selectedFile.size)}</div>
+                        <div style={{ fontSize: "0.85rem", color: "black" }}>{formatFileSize(selectedFile.size)}</div>
                       </div>
                       <button
                         type="button"
@@ -486,8 +516,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, userId }) => {
               )}
 
               {/* Bouton téléverser */}
+
               <button type="submit" style={buttonStyle} disabled={isUploading} onMouseEnter={() => setIsHover2(true)} onMouseLeave={() => setIsHover2(false)} onMouseDown={() => setIsActive2(true)} onMouseUp={() => setIsActive2(false)}>
-                {theme.logos?.UploadIcon && <theme.logos.UploadIcon size={20} color={isHover2 ? "#faf5f2ff" : "#CD5E1480"} />}
+                {!isMobile && <UploadIcon style={uploadIconStyle} />}
+
+                {isMobile && <UploadIcon style={uploadIconStyleMobile} />}
+
                 {isUploading ? "⏳ Téléversement en cours..." : "Téléverser"}
               </button>
             </form>

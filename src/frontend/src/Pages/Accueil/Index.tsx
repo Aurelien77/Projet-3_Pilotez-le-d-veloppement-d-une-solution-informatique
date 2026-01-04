@@ -44,6 +44,10 @@ const Accueil: React.FC<AccueilProps> = ({
 
   const [headerButtonHover, setHeaderButtonHover] = useState(false);
 
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+
+  const [buttonshareActived, setbuttonshareActived] = useState(false);
+
   /* ************************************************************ Effects ************************************************************ */
 
   useEffect(() => {
@@ -55,23 +59,33 @@ const Accueil: React.FC<AccueilProps> = ({
   }, [transitionDelay]);
 
   useEffect(() => {
-    //  state authcontext
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   /* ************************************************************ Fonctions ************************************************************ */
-
-  const navigate = useNavigate();
-  const handleConnect = () => {
-    navigate("/Connexion");
-  };
 
   //Upload de fichiers
 
   const handleFileUpload = () => {
-    setIsUploadModalOpen(true);
+    if (isMobile) {
+      setbuttonshareActived(true);
+      setIsUploadModalOpen(true);
+    } else {
+      setIsUploadModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
-    setIsUploadModalOpen(false);
+    if (isMobile) {
+      setbuttonshareActived(false);
+      setIsUploadModalOpen(false);
+    } else {
+      setIsUploadModalOpen(false);
+    }
   };
 
   // Test du Helper
@@ -118,7 +132,7 @@ const Accueil: React.FC<AccueilProps> = ({
   };
 
   const gardeSubtitleStyle: React.CSSProperties = {
-    fontSize: "clamp(1.2rem, 3vw, 2rem)",
+    fontSize: "clamp(1.1rem, 3vw, 2rem)",
     fontWeight: 400,
     fontStyle: "italic",
     color: theme.colors.black,
@@ -131,20 +145,19 @@ const Accueil: React.FC<AccueilProps> = ({
 
   /* ***********************  Header Style   * ********************** */
   const logoStyle: React.CSSProperties = {
-    fontSize: "1.5rem",
-    fontWeight: 900,
+    fontSize: "2rem",
     color: theme.colors.black,
     marginBottom: "40px",
   };
 
   const ButtonStyle: React.CSSProperties = {
-    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
+    padding: "clamp(8px, 3vw, 12px) clamp(16px, 4vw, 28px)",
     background: headerButtonHover ? "#1a202c" : "#2d3748",
     color: theme.colors.white,
     border: "none",
     borderRadius: "8px",
     fontSize: "clamp(0.85rem, 2vw, 1rem)",
-    fontWeight: 500,
+    letterSpacing: "0.1px",
     cursor: "pointer",
     transition: "all 0.3s ease",
     boxShadow: headerButtonHover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
@@ -164,31 +177,6 @@ const Accueil: React.FC<AccueilProps> = ({
     transition: "opacity 0.8s ease-in-out",
   };
 
-  const header: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px 40px",
-  };
-
-  const logostyle: React.CSSProperties = {
-    fontSize: "clamp(0.5rem, 4vw, 1.3rem)",
-    fontWeight: 900,
-    color: theme.colors.black,
-    fontFamily: theme.fonts.primary,
-  };
-  const connectButtonstyle: React.CSSProperties = {
-    padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 28px)",
-    background: hover ? "#1a202c" : "#2d3748",
-    color: theme.colors.white,
-    borderRadius: "8px",
-    fontSize: "1rem",
-    fontWeight: 500,
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    boxShadow: hover ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "0 2px 8px rgba(0, 0, 0, 0.2)",
-    fontFamily: theme.fonts.primary,
-  };
   const mainContainer: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -196,10 +184,11 @@ const Accueil: React.FC<AccueilProps> = ({
     justifyContent: "center",
     flex: 1,
     padding: "clamp(20px, 5vw, 40px) 20px",
+    marginBottom: isMobile ? "140px" : "0px",
   };
 
   const title: React.CSSProperties = {
-    fontSize: "clamp(1.2rem, 4vw, 2.5rem)",
+    fontSize: "clamp(1.9rem, 4vw, 2.5rem)",
     fontWeight: 400,
     color: theme.colors.black,
     marginBottom: "40px",
@@ -243,6 +232,7 @@ const Accueil: React.FC<AccueilProps> = ({
   const footerStyle: React.CSSProperties = {
     padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
     flexShrink: 0,
+    display: isMobile ? "none" : "block",
   };
 
   const copyrightStyle: React.CSSProperties = {
@@ -270,30 +260,29 @@ const Accueil: React.FC<AccueilProps> = ({
       {/*Page d'accueil  */}
       <div style={pageContainer}>
         <Header logoStyle={logoStyle} buttonStyle={ButtonStyle} />
+        {!buttonshareActived && (
+          <main style={mainContainer}>
+            <h2 style={title}>{question}</h2>
 
-        <main style={mainContainer}>
-          <h2 style={title}>{question}</h2>
-
-          <div style={uploadButtonContainerStyle}>
-            {/*      / ! \ Si un bouton est créé en dessous il herite d'une ombre porté. */}
-            <div style={uploadButtonOuterStyle} onClick={handleFileUpload} onMouseEnter={() => setUploadHover2(true)} onMouseLeave={() => setUploadHover2(false)}>
-              <div style={uploadButtonInnerStyle}>
-                <UploadIcon
-                  style={{
-                    width: "clamp(45px, 12vw, 70px)",
-                    height: "clamp(45px, 12vw, 70px)",
-                    color: "white", // pour le fill si ton SVG utilise fill="currentColor"
-                  }}
-                />
+            <div style={uploadButtonContainerStyle}>
+              {/*      / ! \ Si un bouton est créé en dessous il herite d'une ombre porté. */}
+              <div style={uploadButtonOuterStyle} onClick={handleFileUpload} onMouseEnter={() => setUploadHover2(true)} onMouseLeave={() => setUploadHover2(false)}>
+                <div style={uploadButtonInnerStyle}>
+                  <UploadIcon
+                    style={{
+                      width: "clamp(45px, 12vw, 70px)",
+                      height: "clamp(45px, 12vw, 70px)",
+                      color: "white",
+                    }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </main>
-
+          </main>
+        )}
         {/*******************************************************   Composant  Upload  *******************************************************/}
         {/*   Test : passage du composant en visible ou none au lieu d'un state dans le composant parent => A voir si cette approche complique l'étape des tests*/}
         <FileUpload isOpen={isUploadOpen} onClose={handleCloseModal} userId={userId} />
-
         <Footer containerStyle={footerStyle} textStyle={copyrightStyle} />
       </div>
     </>

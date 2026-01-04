@@ -29,12 +29,23 @@ const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", buttonText = "S
   };
 
   return (
-    <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)" }}>
+    <header
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "20px 0",
+        width: "100%",
+        boxSizing: "border-box",
+      }}
+    >
       <h1
         style={{
           ...logoStyle,
           cursor: hoverLogo ? "pointer" : "default",
           transition: "all 0.2s",
+          margin: 0,
+          marginLeft: "clamp(2vw, 7vw, 4vw)",
         }}
         onClick={handleHome}
         onMouseEnter={() => setHoverLogo(true)}
@@ -42,7 +53,15 @@ const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", buttonText = "S
       >
         {logoText}
       </h1>
-      <button style={buttonStyle} onClick={onButtonClick} onMouseEnter={() => setHoverButton(true)} onMouseLeave={() => setHoverButton(false)}>
+      <button
+        style={{
+          ...buttonStyle,
+          marginRight: "clamp(2vw, 6vw, 4vw)",
+        }}
+        onClick={onButtonClick}
+        onMouseEnter={() => setHoverButton(true)}
+        onMouseLeave={() => setHoverButton(false)}
+      >
         {buttonText}
       </button>
     </header>
