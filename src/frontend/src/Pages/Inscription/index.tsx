@@ -71,13 +71,19 @@ const Register: React.FC<InscriptionProps> = ({
       setErrorMessage("Les mots de passe ne correspondent pas");
       return;
     }
+    const generateValidLogin = (firstName: string) => {
+      const fn = firstName.replace(/[^a-zA-Z0-9]/g, "").substring(0, 6);
 
+      const randomNum = Math.floor(Math.random() * 9999);
+      const login = `${fn}${randomNum}`.substring(0, 20);
+      return login;
+    };
     const dataforsend = {
       email,
       password,
       firstName: "MyFirstname",
       lastName: "MyLastname",
-      login: "MyLogin",
+      login: generateValidLogin("MyLogin"),
       picture: "MyPicture",
     };
 

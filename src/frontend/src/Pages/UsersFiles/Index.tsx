@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import theme from "../../Config/Themes/Index";
+import { useAuth } from "../../Helpers/AuthContext";
 
 /* ************************************************************ Typage ************************************************************ */
 
@@ -16,6 +17,14 @@ interface FileItem {
 
 type FilterType = "all" | "active" | "expired";
 
+interface User {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  login: string;
+}
+
 /* ************************************************************ Composant ************************************************************ */
 
 const Usersfiles: React.FC = () => {
@@ -28,20 +37,74 @@ const Usersfiles: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [hoverLogo, setHoverLogo] = useState(false);
-  const userId = 8;
+
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const { authState } = useAuth();
+
+  const userId = authState?.id;
+  const [userData, setUserData] = useState<User>({
+    id: userId,
+    email: "",
+    firstName: "Utilisateur",
+    lastName: "",
+    login: "",
+  });
 
   /* ************************************************************ Effects ************************************************************ */
 
   useEffect(() => {
     fetchUserFiles();
+    fetchUserData();
   }, [userId]);
 
   useEffect(() => {
     applyFilters();
   }, [files, filter, searchQuery]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   /* ************************************************************ Fonctions ************************************************************ */
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`https://localhost:7120/api/Users/${userId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération de l'utilisateur");
+      }
+
+      const data: User = await response.json();
+      setUserData(data);
+    } catch (err) {
+      console.error("Erreur utilisateur:", err);
+      // Données par défaut en cas d'erreur
+      setUserData({
+        id: userId,
+        email: "",
+        firstName: "Utilisateur",
+        lastName: "",
+        login: "",
+      });
+    }
+  };
+
   const HandleHome = () => {
     navigate("/");
   };
@@ -119,8 +182,8 @@ const Usersfiles: React.FC = () => {
     alert("Lien copié dans le presse-papiers !");
   };
 
-  const handleAccess = () => {
-    navigate(`/download/8`);
+  const handleAccess = (fileId: number) => {
+    navigate(`/download/${fileId}`);
   };
 
   const formatDate = (dateString: string): string => {
@@ -184,7 +247,7 @@ const Usersfiles: React.FC = () => {
 
   const sidebar: React.CSSProperties = {
     position: "fixed",
-    left: 0,
+    left: isMobile ? (isSidebarOpen ? 0 : "-100%") : 0,
     top: 0,
     bottom: 0,
     width: "220px",
@@ -193,8 +256,9 @@ const Usersfiles: React.FC = () => {
     padding: "20px",
     display: "flex",
     flexDirection: "column",
+    transition: "left 0.3s ease",
+    zIndex: 2000,
   };
-
   const [hover, setHover] = React.useState(false);
 
   const logoStyle: React.CSSProperties = {
@@ -218,23 +282,27 @@ const Usersfiles: React.FC = () => {
   };
 
   const mainContent: React.CSSProperties = {
-    marginLeft: "220px",
-    padding: "30px 50px",
+    marginLeft: isMobile ? 0 : "255px",
+    padding: isMobile ? "0px" : "0px 0px",
+    transition: "margin-left 0.3s ease",
+    overflowX: "hidden",
   };
 
   const header: React.CSSProperties = {
     display: "flex",
-    padding: "clamp(10px, 2vw, 16px) clamp(12px, 4vw, 24px)",
-    justifyContent: "right",
+    padding: "16px 24px",
+    justifyContent: isMobile ? "space-between" : "flex-end",
     alignItems: "center",
     marginBottom: "30px",
     backgroundColor: "rgba(216, 97, 28, 0.1)",
+    borderBottom: "1px solid rgba(216, 97, 28, 0.29)",
   };
 
   const titleStyle: React.CSSProperties = {
     fontSize: "1.7rem",
     fontWeight: 700,
     color: "#2d3748",
+    marginLeft: "1.5vw",
   };
 
   const buttonGroupStyle: React.CSSProperties = {
@@ -248,11 +316,12 @@ const Usersfiles: React.FC = () => {
     color: "white",
     border: "none",
     borderRadius: "8px",
-    fontSize: "0.95rem",
+    fontSize: isMobile ? "0.65rem" : "0.95rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.3s ease",
     fontFamily: theme.fonts.primary,
+    whiteSpace: "nowrap",
   };
 
   const logoutButtonStyle: React.CSSProperties = {
@@ -271,6 +340,8 @@ const Usersfiles: React.FC = () => {
   const filterContainer: React.CSSProperties = {
     backgroundColor: "transparent",
     marginBottom: "24px",
+    marginLeft: isMobile ? "0" : "1.5vw",
+    marginRight: "0",
   };
 
   const filterTabsStyle: React.CSSProperties = {
@@ -281,7 +352,7 @@ const Usersfiles: React.FC = () => {
     padding: "0px",
     borderRadius: "50px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
-    width: "fit-content",
+    width: isMobile ? "100%" : "fit-content",
   };
 
   const filterTabStyle = (isActive: boolean): React.CSSProperties => ({
@@ -296,6 +367,7 @@ const Usersfiles: React.FC = () => {
     transition: "all 0.3s ease",
     fontFamily: theme.fonts.primary,
     whiteSpace: "nowrap",
+    flex: isMobile ? "1" : "initial",
   });
 
   const filterTabStyleActif = (isActive: boolean): React.CSSProperties => ({
@@ -308,33 +380,27 @@ const Usersfiles: React.FC = () => {
     borderRadius: "10px 50px 50px 10px",
   });
 
-  const searchInputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "14px 16px",
-    border: "1px solid #E0E0E0",
-    borderRadius: "10px",
-    fontSize: "1rem",
-    fontFamily: theme.fonts.primary,
-    backgroundColor: "white",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-  };
-
   const filesContainer: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
-    gap: "14px",
+    gap: "5px",
   };
 
   const fileCardStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 193, 145, 0.05)",
     borderRadius: "16px",
-    padding: "20px 24px",
+    padding: isMobile ? "12px" : "20px 24px",
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+    maxHeight: isMobile ? "auto" : "2vw",
     transition: "all 0.3s ease",
     cursor: hover ? "pointer" : "none",
+    border: "1px solid rgba(215, 99, 11, 0.2)",
+    marginLeft: isMobile ? "10px" : "1.5vw",
+    marginRight: isMobile ? "10px" : "1.5vw",
+    marginBottom: isMobile ? "12px" : "0",
   };
 
   const fileInfoStyle: React.CSSProperties = {
@@ -342,63 +408,70 @@ const Usersfiles: React.FC = () => {
     alignItems: "center",
     gap: "18px",
     flex: 1,
+    minWidth: isMobile ? "0" : "auto",
   };
 
-  const fileIconContainerStyle = (bgColor: string): React.CSSProperties => ({
+  const fileIconContainerStyle: React.CSSProperties = {
     width: "52px",
     height: "52px",
     borderRadius: "10px",
-    backgroundColor: bgColor,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: "1.6rem",
-  });
+  };
 
   const fileDetailsStyle: React.CSSProperties = {
     flex: 1,
+    minWidth: 0,
   };
 
   const fileNameContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "6px",
+    gap: isMobile ? "6px" : "10px",
+    marginBottom: isMobile ? "4px" : "6px",
     flexWrap: "wrap",
   };
 
   const fileNameStyle: React.CSSProperties = {
-    fontSize: "1.05rem",
+    fontSize: isMobile ? "0.95rem" : "1.05rem",
     fontWeight: 600,
     color: "#2d3748",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    maxWidth: "300px",
+    maxWidth: isMobile ? "200px" : "300px",
   };
 
   const fileMetaStyle: React.CSSProperties = {
-    fontSize: "0.9rem",
+    display: "flex",
+    justifyContent: "space-between",
+    fontSize: isMobile ? "0.85rem" : "0.9rem",
     color: "#718096",
   };
 
   const fileActionsStyle: React.CSSProperties = {
     display: "flex",
+    flexWrap: "wrap",
+    width: isMobile ? "100%" : "auto",
     gap: "10px",
+    justifyContent: isMobile ? "space-between" : "flex-start",
     alignItems: "center",
   };
 
   const actionButtonStyle: React.CSSProperties = {
-    padding: "10px 18px",
+    padding: isMobile ? "8px 12px" : "10px 18px",
     border: "none",
     borderRadius: "8px",
-    fontSize: "0.9rem",
+    fontSize: isMobile ? "0.8rem" : "0.9rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.3s ease",
     display: "flex",
     alignItems: "center",
     gap: "6px",
+    flex: isMobile ? "1" : "initial",
   };
 
   const deleteButtonStyle: React.CSSProperties = {
@@ -458,28 +531,108 @@ const Usersfiles: React.FC = () => {
     textAlign: "center",
   };
 
-  const statusBadgeStyle = (isExpired: boolean): React.CSSProperties => ({
-    display: "inline-block",
-    padding: "6px 16px",
-    borderRadius: "8px",
-    fontSize: "0.8rem",
-    fontWeight: 600,
-    backgroundColor: isExpired ? "#FFEBEE" : "#E8F5E9",
-    color: isExpired ? "#D32F2F" : "#388E3C",
-    border: `1px solid ${isExpired ? "#FFCDD2" : "#C8E6C9"}`,
-  });
-
   const lockIconStyle: React.CSSProperties = {
     fontSize: "1rem",
   };
+
+  //Pour mobile
+
+  const overlay: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: isMobile && isSidebarOpen ? "block" : "none",
+    zIndex: 1999,
+  };
+
+  const mobileHeader: React.CSSProperties = {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "12px",
+  };
+
+  const menuButton: React.CSSProperties = {
+    background: "none",
+    border: "none",
+    fontSize: "24px",
+    cursor: "pointer",
+    padding: "8px",
+    color: "#2d3748",
+  };
+
+  const userInfo: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+  };
+
+  const userPhoto: React.CSSProperties = {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    objectFit: "cover",
+  };
+
+  const userName: React.CSSProperties = {
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    color: "#2d3748",
+  };
+
+  const closeButtonStyle: React.CSSProperties = {
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    background: "none",
+    border: "none",
+    color: "white",
+    fontSize: "24px",
+    cursor: "pointer",
+    padding: "0",
+    width: "30px",
+    height: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+  const menuDotsButton: React.CSSProperties = {
+    background: "none",
+    border: "none",
+    fontSize: "1.5rem",
+    color: "#FF9B73",
+    cursor: "pointer",
+    padding: "4px 8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: "auto",
+  };
+  const defaultAvatar = `data:image/svg+xml,${encodeURIComponent(`
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="60" fill="#D9D9D9"/>
+  <circle cx="60" cy="45" r="25" fill="#FFFFFF"/>
+  <path d="M35 95 C35 75, 85 75, 85 95 Z" fill="#FFFFFF"/>
+  <ellipse cx="60" cy="95" rx="25" ry="5" fill="#C0C0C0"/>
+</svg>
+`)}`;
 
   /* ************************************************************ Rendu ************************************************************ */
 
   return (
     <div style={pageContainer}>
       {/* Sidebar */}
-
+      <div style={overlay} onClick={() => setIsSidebarOpen(false)} />
       <aside style={sidebar}>
+        {isMobile && (
+          <button style={closeButtonStyle} onClick={() => setIsSidebarOpen(false)}>
+            ✕
+          </button>
+        )}
         <h1 style={logoStyle} onClick={HandleHome} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
           DataShare
         </h1>
@@ -493,13 +646,30 @@ const Usersfiles: React.FC = () => {
       <main style={mainContent}>
         {/* En-tête */}
         <div style={header}>
+          {isMobile && userData && (
+            <div style={mobileHeader}>
+              <button style={menuButton} onClick={() => setIsSidebarOpen(true)}>
+                ☰
+              </button>
+              <div style={userInfo}>
+                <img src={defaultAvatar} alt="User" style={userPhoto} />
+                <span style={userName}>
+                  {userData.firstName} {userData.lastName}
+                </span>
+              </div>
+            </div>
+          )}
           <div style={buttonGroupStyle}>
-            <button style={addButtonStyle} onClick={() => navigate("/")}>
-              Ajouter des fichiers
-            </button>
-            <button style={logoutButtonStyle} onClick={() => navigate("/")}>
-              🔓 Déconnexion
-            </button>
+            {!isMobile && (
+              <button style={addButtonStyle} onClick={() => navigate("/")}>
+                Ajouter des fichiers
+              </button>
+            )}
+            {!isMobile && (
+              <button style={logoutButtonStyle} onClick={() => navigate("/")}>
+                🔓 Déconnexion
+              </button>
+            )}
           </div>
         </div>
 
@@ -533,31 +703,66 @@ const Usersfiles: React.FC = () => {
         ) : (
           <div style={filesContainer}>
             {filteredFiles.map((file) => {
-              const { icon, bgColor } = getFileIcon(file.fileName);
+              const { icon } = getFileIcon(file.fileName);
               return (
                 <div key={file.id} style={fileCardStyle} onClick={() => handleCopyLink(file.downloadLink, file.isExpired)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                   <div style={fileInfoStyle}>
-                    <div style={fileIconContainerStyle(bgColor)}>{icon}</div>
+                    <div style={fileIconContainerStyle}>{icon}</div>
                     <div style={fileDetailsStyle}>
                       <div style={fileNameContainerStyle}>
                         <span style={fileNameStyle}>{file.fileName}</span>
-
-                        {/*             <span style={statusBadgeStyle(file.isExpired)}>{file.isExpired ? "Expiré" : "Actif"}</span> */}
                       </div>
-                      <div style={fileMetaStyle}>{file.isExpired ? "Expiré • Ce fichier à expiré. Il n'est plus stocké chez nous" : formatDate(file.expirationDate)}</div>
+
+                      <div style={fileMetaStyle}>
+                        {file.isExpired ? (
+                          <>
+                            <span style={{ color: "#e53e3e", fontWeight: 600 }}>Expiré</span>
+                            {"Ce fichier a expiré. Il n'est plus stocké chez nous"}
+                          </>
+                        ) : (
+                          formatDate(file.expirationDate)
+                        )}
+                      </div>
                     </div>
                   </div>
-                  {file.hasPassword && <span style={lockIconStyle}>🔒</span>}
-                  <button style={deleteButtonStyle} onClick={() => handleDelete(file.id)} title="Supprimer">
-                    🗑️ Supprimer
-                  </button>
+                  {file.hasPassword && !file.isExpired && <span style={lockIconStyle}>🔒</span>}
+
+                  {!file.isExpired && !isMobile && (
+                    <button
+                      style={deleteButtonStyle}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(file.id);
+                      }}
+                      title="Supprimer"
+                    >
+                      🗑️ Supprimer
+                    </button>
+                  )}
+
                   <div style={fileActionsStyle}>
-                    {!file.isExpired && (
-                      <>
-                        <button style={accessButtonStyle} onClick={() => handleAccess()} title="Accéder">
-                          Accéder →
-                        </button>
-                      </>
+                    {!file.isExpired && !isMobile && (
+                      <button
+                        style={accessButtonStyle}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAccess(file.id);
+                        }}
+                        title="Accéder"
+                      >
+                        Accéder →
+                      </button>
+                    )}
+
+                    {!file.isExpired && isMobile && (
+                      <button
+                        style={menuDotsButton}
+                        onClick={(e) => {
+                          e.stopPropagation(); /* Ouvrir menu */
+                        }}
+                      >
+                        ⋮
+                      </button>
                     )}
                   </div>
                 </div>

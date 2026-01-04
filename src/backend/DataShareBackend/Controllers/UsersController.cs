@@ -131,10 +131,10 @@ namespace DataShareBackend.Controllers
 
 
 
-                // Vérifier si le login existe déjà
+                //Vérifier si le login existe déjà
                 if (!string.IsNullOrEmpty(userDto.Login) && await _context.Users.AnyAsync(u => u.Login == userDto.Login))
-                {
-                    return BadRequest(new { message = "Ce login est déjà utilisé" });
+                 {
+                     return BadRequest(new { message = "Ce login est déjà utilisé" });
                 }
 
 
