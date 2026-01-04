@@ -5,6 +5,8 @@ import FileUpload from "../../Components/Upload";
 import { useAuth } from "../../Helpers/AuthContext";
 import Footer from "../../Components/Footer/Index";
 import Header from "../../Components/Header/Index";
+
+import { ReactComponent as UploadIcon } from "../../Logo.svg";
 /* ************************************************************ Typage ************************************************************ */
 
 interface AccueilProps {
@@ -205,16 +207,6 @@ const Accueil: React.FC<AccueilProps> = ({
     fontFamily: theme.fonts.primary,
   };
 
-  const footer: React.CSSProperties = {
-    padding: "clamp(15px, 3vw, 20px) clamp(20px, 4vw, 40px)",
-  };
-
-  const copyrightstyle: React.CSSProperties = {
-    fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
-    color: theme.colors.black,
-    opacity: 0.8,
-    fontFamily: theme.fonts.primary,
-  };
   const uploadButtonContainerStyle: React.CSSProperties = {
     position: "relative",
     display: "flex",
@@ -239,7 +231,7 @@ const Accueil: React.FC<AccueilProps> = ({
     width: "clamp(70px, 18vw, 100px)",
     height: "clamp(70px, 18vw, 100px)",
     borderRadius: "50%",
-    background: "#2d3748",
+    background: "#100218",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -285,7 +277,15 @@ const Accueil: React.FC<AccueilProps> = ({
           <div style={uploadButtonContainerStyle}>
             {/*      / ! \ Si un bouton est créé en dessous il herite d'une ombre porté. */}
             <div style={uploadButtonOuterStyle} onClick={handleFileUpload} onMouseEnter={() => setUploadHover2(true)} onMouseLeave={() => setUploadHover2(false)}>
-              <div style={uploadButtonInnerStyle}>{theme.logos?.UploadIcon && <theme.logos.UploadIcon size={40} color="white" />}</div>
+              <div style={uploadButtonInnerStyle}>
+                <UploadIcon
+                  style={{
+                    width: "clamp(45px, 12vw, 70px)",
+                    height: "clamp(45px, 12vw, 70px)",
+                    color: "white", // pour le fill si ton SVG utilise fill="currentColor"
+                  }}
+                />
+              </div>
             </div>
           </div>
         </main>
