@@ -178,7 +178,7 @@ const Usersfiles: React.FC = () => {
 
   const pageContainer: React.CSSProperties = {
     minHeight: "100vh",
-    backgroundColor: "#F5E6D3",
+
     fontFamily: theme.fonts.primary,
   };
 
@@ -224,14 +224,15 @@ const Usersfiles: React.FC = () => {
 
   const header: React.CSSProperties = {
     display: "flex",
-    justifyContent: "space-between",
+    padding: "clamp(10px, 2vw, 16px) clamp(12px, 4vw, 24px)",
+    justifyContent: "right",
     alignItems: "center",
     marginBottom: "30px",
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(216, 97, 28, 0.1)",
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize: "2.2rem",
+    fontSize: "1.7rem",
     fontWeight: 700,
     color: "#2d3748",
   };
@@ -258,10 +259,10 @@ const Usersfiles: React.FC = () => {
     padding: "12px 24px",
     backgroundColor: "transparent",
     color: "#FF812D",
-    border: "2px solid #FF812D",
+    border: "none",
     borderRadius: "8px",
     fontSize: "0.95rem",
-    fontWeight: 600,
+    fontWeight: 300,
     cursor: "pointer",
     transition: "all 0.3s ease",
     fontFamily: theme.fonts.primary,
@@ -276,8 +277,8 @@ const Usersfiles: React.FC = () => {
     display: "flex",
     gap: "0px",
     marginBottom: "16px",
-    backgroundColor: "white",
-    padding: "4px",
+
+    padding: "0px",
     borderRadius: "50px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
     width: "fit-content",
@@ -285,7 +286,7 @@ const Usersfiles: React.FC = () => {
 
   const filterTabStyle = (isActive: boolean): React.CSSProperties => ({
     padding: "10px 28px",
-    backgroundColor: isActive ? "#E07856" : "transparent",
+    backgroundColor: isActive ? "#E77A6E" : "rgba(255, 165, 105, 0.05)",
     color: isActive ? "white" : "#2d3748",
     border: "none",
     borderRadius: "50px 10px 10px 50px",
@@ -325,7 +326,7 @@ const Usersfiles: React.FC = () => {
   };
 
   const fileCardStyle: React.CSSProperties = {
-    backgroundColor: "white",
+    backgroundColor: "rgba(255, 193, 145, 0.05)",
     borderRadius: "16px",
     padding: "20px 24px",
     display: "flex",
@@ -402,21 +403,17 @@ const Usersfiles: React.FC = () => {
 
   const deleteButtonStyle: React.CSSProperties = {
     ...actionButtonStyle,
-    backgroundColor: "#FFB3B3",
-    color: "#C53030",
+    backgroundColor: "rgba(255, 165, 105, 0.03)",
+    marginRight: "10px",
+    color: "#f1ad1aff",
     border: "1px solid #FFA0A0",
-  };
-
-  const copyButtonStyle: React.CSSProperties = {
-    ...actionButtonStyle,
-    backgroundColor: "#5DADE2",
-    color: "white",
   };
 
   const accessButtonStyle: React.CSSProperties = {
     ...actionButtonStyle,
-    backgroundColor: "#6BCF95",
-    color: "white",
+    backgroundColor: "rgba(255, 165, 105, 0.03)",
+    color: "#f1ad1aff",
+    border: "1px solid #FFA0A0",
   };
 
   const copyrightStyle: React.CSSProperties = {
@@ -481,6 +478,7 @@ const Usersfiles: React.FC = () => {
   return (
     <div style={pageContainer}>
       {/* Sidebar */}
+
       <aside style={sidebar}>
         <h1 style={logoStyle} onClick={HandleHome} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
           DataShare
@@ -495,7 +493,6 @@ const Usersfiles: React.FC = () => {
       <main style={mainContent}>
         {/* En-tête */}
         <div style={header}>
-          <h2 style={titleStyle}>Mes fichiers</h2>
           <div style={buttonGroupStyle}>
             <button style={addButtonStyle} onClick={() => navigate("/")}>
               Ajouter des fichiers
@@ -508,7 +505,7 @@ const Usersfiles: React.FC = () => {
 
         {/* Message d'erreur */}
         {error && <div style={errorStyle}>{error}</div>}
-
+        <h2 style={titleStyle}>Mes fichiers</h2>
         {/* Filtres */}
         <div style={filterContainer}>
           <div style={filterTabsStyle}>
@@ -522,11 +519,6 @@ const Usersfiles: React.FC = () => {
               Expiré
             </button>
           </div>
-        </div>
-
-        {/* Barre de recherche */}
-        <div style={{ marginBottom: "24px" }}>
-          <input type="text" placeholder="Rechercher un fichier..." style={searchInputStyle} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </div>
 
         {/* Liste des fichiers */}
@@ -549,12 +541,13 @@ const Usersfiles: React.FC = () => {
                     <div style={fileDetailsStyle}>
                       <div style={fileNameContainerStyle}>
                         <span style={fileNameStyle}>{file.fileName}</span>
-                        {file.hasPassword && <span style={lockIconStyle}>🔒</span>}
-                        <span style={statusBadgeStyle(file.isExpired)}>{file.isExpired ? "Expiré" : "Actif"}</span>
+
+                        {/*             <span style={statusBadgeStyle(file.isExpired)}>{file.isExpired ? "Expiré" : "Actif"}</span> */}
                       </div>
                       <div style={fileMetaStyle}>{file.isExpired ? "Expiré • Ce fichier à expiré. Il n'est plus stocké chez nous" : formatDate(file.expirationDate)}</div>
                     </div>
                   </div>
+                  {file.hasPassword && <span style={lockIconStyle}>🔒</span>}
                   <button style={deleteButtonStyle} onClick={() => handleDelete(file.id)} title="Supprimer">
                     🗑️ Supprimer
                   </button>
