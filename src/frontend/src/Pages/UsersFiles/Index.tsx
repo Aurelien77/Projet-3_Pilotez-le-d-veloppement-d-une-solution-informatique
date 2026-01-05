@@ -241,7 +241,6 @@ const Usersfiles: React.FC = () => {
 
   const pageContainer: React.CSSProperties = {
     minHeight: "100vh",
-
     fontFamily: theme.fonts.primary,
   };
 
@@ -302,7 +301,7 @@ const Usersfiles: React.FC = () => {
     fontSize: "1.7rem",
     fontWeight: 700,
     color: "#2d3748",
-    marginLeft: "1.5vw",
+    marginLeft: isMobile ? "3vw" : "1.5vw",
   };
 
   const buttonGroupStyle: React.CSSProperties = {
@@ -340,15 +339,14 @@ const Usersfiles: React.FC = () => {
   const filterContainer: React.CSSProperties = {
     backgroundColor: "transparent",
     marginBottom: "24px",
-    marginLeft: isMobile ? "0" : "1.5vw",
-    marginRight: "0",
+    marginLeft: isMobile ? "15px" : "1.5vw",
+    marginRight: isMobile ? "15px" : "0",
   };
 
   const filterTabsStyle: React.CSSProperties = {
     display: "flex",
     gap: "0px",
     marginBottom: "16px",
-
     padding: "0px",
     borderRadius: "50px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -388,18 +386,19 @@ const Usersfiles: React.FC = () => {
 
   const fileCardStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 193, 145, 0.05)",
-    borderRadius: "16px",
-    padding: isMobile ? "12px" : "20px 24px",
+    borderRadius: isMobile ? "12px" : "16px",
+    padding: isMobile ? "16px" : "20px 24px",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    maxHeight: isMobile ? "auto" : "2vw",
+    minHeight: isMobile ? "80px" : "auto",
+    maxHeight: isMobile ? "none" : "2vw",
     transition: "all 0.3s ease",
     cursor: hover ? "pointer" : "none",
     border: "1px solid rgba(215, 99, 11, 0.2)",
-    marginLeft: isMobile ? "10px" : "1.5vw",
-    marginRight: isMobile ? "10px" : "1.5vw",
+    marginLeft: isMobile ? "15px" : "1.5vw",
+    marginRight: isMobile ? "15px" : "1.5vw",
     marginBottom: isMobile ? "12px" : "0",
   };
 
@@ -412,18 +411,21 @@ const Usersfiles: React.FC = () => {
   };
 
   const fileIconContainerStyle: React.CSSProperties = {
-    width: "52px",
-    height: "52px",
+    width: isMobile ? "48px" : "52px",
+    height: isMobile ? "48px" : "52px",
     borderRadius: "10px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "1.6rem",
+    fontSize: isMobile ? "1.5rem" : "1.6rem",
   };
 
   const fileDetailsStyle: React.CSSProperties = {
     flex: 1,
     minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
   };
 
   const fileNameContainerStyle: React.CSSProperties = {
@@ -431,7 +433,7 @@ const Usersfiles: React.FC = () => {
     alignItems: "center",
     gap: isMobile ? "6px" : "10px",
     marginBottom: isMobile ? "4px" : "6px",
-    flexWrap: "wrap",
+    flexWrap: "nowrap",
   };
 
   const fileNameStyle: React.CSSProperties = {
@@ -446,15 +448,16 @@ const Usersfiles: React.FC = () => {
 
   const fileMetaStyle: React.CSSProperties = {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     fontSize: isMobile ? "0.85rem" : "0.9rem",
     color: "#718096",
+    marginTop: isMobile ? "4px" : "0",
   };
 
   const fileActionsStyle: React.CSSProperties = {
     display: "flex",
     flexWrap: "wrap",
-    width: isMobile ? "100%" : "auto",
+    width: isMobile ? "auto" : "auto",
     gap: "10px",
     justifyContent: isMobile ? "space-between" : "flex-start",
     alignItems: "center",
@@ -717,7 +720,7 @@ const Usersfiles: React.FC = () => {
                         {file.isExpired ? (
                           <>
                             <span style={{ color: "#e53e3e", fontWeight: 600 }}>Expiré</span>
-                            {"Ce fichier a expiré. Il n'est plus stocké chez nous"}
+                            {!isMobile && <span>Ce fichier a expiré. Il n'est plus stocké chez nous </span>}
                           </>
                         ) : (
                           formatDate(file.expirationDate)
