@@ -24,7 +24,7 @@ jest.mock("./Helpers/AuthContext", () => ({
   }),
 }));
 
-jest.mock("./Pages/Accueil/Index", () => ({
+jest.mock("./Pages/Accueil/Index.tsx", () => ({
   __esModule: true,
   default: () => <div>Login Page</div>,
 }));
@@ -49,7 +49,7 @@ jest.mock("./Pages/UsersFiles/Index", () => ({
   default: () => <div>User Files Page</div>,
 }));
 
-jest.mock("./Pages/DowloadFiles/Index", () => ({
+jest.mock("./Pages/DownloadFiles/Index.tsx", () => ({
   __esModule: true,
   default: () => <div>Download File Page</div>,
 }));

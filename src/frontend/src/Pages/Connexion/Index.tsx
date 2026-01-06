@@ -251,8 +251,11 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
           <form onSubmit={handleSubmit}>
             {/* Email */}
             <div style={formGroupStyle}>
-              <label style={labelStyle}>{emailLabel}</label>
+              <label htmlFor="email" style={labelStyle}>
+                {emailLabel}
+              </label>
               <input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -273,8 +276,11 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
 
             {/* Password */}
             <div style={formGroupStyle}>
-              <label style={labelStyle}>{passwordLabel}</label>
+              <label htmlFor="password" style={labelStyle}>
+                {passwordLabel}
+              </label>
               <input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -310,6 +316,7 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
             </span>
 
             <button
+              data-testid="submit-button"
               type="submit"
               style={submitButtonStyle}
               disabled={isLoading}
