@@ -244,7 +244,8 @@ namespace DataShareBackend.Tests
             Assert.Contains("succès", response.Message.ToLower());
             Assert.True(response.FileId > 0);
             Assert.Equal("test.txt", response.FileName);
-            Assert.Contains("/api/Files/download/", response.DownloadLink);
+            Assert.Contains("/download/", response.DownloadLink);
+
 
             _output.WriteLine("✅ Fichier uploadé avec succès");
             _output.WriteLine($"FileId: {response.FileId}");

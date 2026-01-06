@@ -1,140 +1,216 @@
-# 🔐 SECURITY.md — État actuel de la sécurité (DataShare)
+🔐 SECURITY.md — État actuel de la sécurité (DataShare)
 
-Ce document décrit **uniquement les mécanismes de sécurité actuellement en place** dans l’application **DataShare**, sans proposer de correctifs ou d’améliorations.
+Ce document décrit uniquement les mécanismes de sécurité actuellement en place dans l’application DataShare, sans proposer de correctifs ou d’améliorations.
 
 Stack technique :
 
-- Frontend : **React + TypeScript**
-- Backend : **C# ASP.NET Core (.NET)**
-- Base de données : **PostgreSQL (Entity Framework Core)**
+Frontend : React + TypeScript
 
----
+Backend : C# ASP.NET Core (.NET)
 
-## 🧱 Architecture générale
+Base de données : PostgreSQL (Entity Framework Core)
 
-```
+🧱 Architecture générale
 [ Navigateur ]
-      ↓ HTTPS
+↓ HTTPS
 [ React + TypeScript ]
-      ↓ CORS (origine contrôlée)
+↓ CORS (origine contrôlée)
 [ ASP.NET Core API ]
-      ↓ ORM sécurisé
+↓ ORM sécurisé
 [ PostgreSQL ]
-```
 
----
+Tests : Jest (frontend), xUnit (backend)
 
-## ✅ Sécurité côté frontend
+✅ Sécurité côté frontend
+React
 
-### React
+React échappe automatiquement les données affichées dans le DOM.
 
-- React échappe automatiquement les données affichées dans le DOM
-- Aucune utilisation de `dangerouslySetInnerHTML`
-- Aucun rendu direct de HTML fourni par le backend
+Aucune utilisation de dangerouslySetInnerHTML.
 
-➡️ Le **XSS réfléchi côté frontend est bloqué par défaut**.
+Aucun rendu direct de HTML fourni par le backend.
 
-### TypeScript
+➡️ Le XSS réfléchi côté frontend est bloqué par défaut.
 
-- Typage strict des données échangées avec l’API
-- Réduction des erreurs de logique (types incorrects, valeurs nulles)
+TypeScript
 
-## ✅ Sécurité côté backend (ASP.NET Core)
+Typage strict des données échangées avec l’API.
 
-### Validation des entrées
+Réduction des erreurs de logique (types incorrects, valeurs nulles).
 
-Les données reçues sont contrôlées avant traitement :
+✅ Sécurité côté backend (ASP.NET Core)
+🔹 Validation des entrées
 
-- Email validé par expression régulière
-- Mot de passe validé par expression régulière (complexité)
-- Login validé par expression régulière
-- Vérification d’unicité (email, login)
+Emails, logins et mots de passe validés par expressions régulières.
 
-➡️ Réduction des entrées malformées ou anormales.
+Vérification de l’unicité des emails et logins.
 
-### Accès base de données
+Contrôle des dates pour les fichiers (upload et expiration).
 
-- Utilisation exclusive d’**Entity Framework Core**
-- Aucune requête SQL brute
+➡️ Réduction des entrées malformées ou anormales et prévention d’erreurs logiques.
+
+🔹 Accès à la base de données
+
+Utilisation exclusive d’Entity Framework Core.
+
+Aucune requête SQL brute.
 
 ➡️ Protection native contre les injections SQL.
 
----
+🔹 Upload et gestion des fichiers
 
-### Gestion des mots de passe
+Les fichiers sont uploadés uniquement via des DTO contrôlés (UploadFileDto).
 
-- Mot de passe **haché avant stockage** via un service dédié
-- Aucun mot de passe en clair stocké ou retourné
+Stockage dans des chemins contrôlés (ContentRootPath / dossier temporaire), évitant l’accès arbitraire aux fichiers système.
 
----
+Les mots de passe de fichiers sont hachés avant stockage.
 
-## ✅ Authentification & session
+Les liens de téléchargement sont basés sur des identifiants sécurisés (FileId) et non sur les noms originaux.
 
-### JWT
+Validation des dates d’expiration pour chaque fichier.
 
-- Token JWT généré côté backend
+Vérification que seul le propriétaire peut supprimer un fichier.
 
-### Cookie de session
+🔹 Gestion des mots de passe et utilisateurs
 
-Le JWT est stocké dans un cookie avec les attributs suivants :
+Mots de passe utilisateur hachés avant stockage.
 
-- `HttpOnly = true`
-- `Secure = true`
-- `SameSite = Strict`
+Les mots de passe et autres données sensibles ne sont jamais retournés par l’API.
+
+Vérification d’unicité des emails et logins pour éviter la création de comptes en double.
+
+🔹 Authentification & session
+
+Utilisation de JWT pour l’authentification.
+
+JWT stocké dans un cookie avec les attributs :
+
+HttpOnly = true
+
+Secure = true
+
+SameSite = Strict
 
 ➡️ Protection contre :
 
-- Accès JavaScript au token
-- Vol de session via XSS
-- Attaques CSRF classiques
+Vol de session via XSS
 
----
+Accès JavaScript aux tokens
 
-## ✅ CORS (Cross-Origin Resource Sharing)
+Attaques CSRF classiques
 
-Configuration actuelle :
+🔹 CORS (Cross-Origin Resource Sharing)
 
-- Une seule origine autorisée : `http://localhost:3000`
-- Méthodes HTTP autorisées : toutes
-- Headers autorisés : tous
-- Cookies autorisés (`AllowCredentials`)
+Une seule origine autorisée : http://localhost:3000.
+
+Méthodes HTTP autorisées : toutes.
+
+Headers autorisés : tous.
+
+Cookies autorisés (AllowCredentials).
 
 ➡️ Les appels API sont limités au frontend déclaré.
 
----
+🔹 HTTPS / SSL
 
-## ✅ HTTPS / SSL
+En développement : HTTPS activé via UseHttpsRedirection(), certificat fourni par .NET dev-certs.
 
-### En environnement de développement
+En production : HTTPS supposé géré par l’infrastructure (serveur ou hébergeur).
 
-- HTTPS activé via `UseHttpsRedirection()`
-- Certificat de développement fourni par .NET (`dotnet dev-certs`)
+🔹 Exposition des endpoints
 
-### Environnement de production
+Routes API définies explicitement dans les contrôleurs ASP.NET Core.
 
-- ASP.NET Core **n’inclut pas** la gestion des certificats SSL
-- Le framework suppose que le HTTPS est géré par l’infrastructure (serveur ou hébergeur)
+Aucune exécution de code dynamique côté serveur.
 
----
+🧪 Tests unitaires de sécurité implicites
 
-## ✅ Exposition des endpoints
+UploadFile_UserNotFound_ReturnsBadRequest → empêche l’upload pour des utilisateurs inexistants.
 
-- API exposée uniquement via des contrôleurs ASP.NET Core
-- Routes explicitement définies
-- Aucune exécution de code dynamique côté serveur
+UploadFile_ExpiredDate_ReturnsBadRequest → empêche l’upload avec date passée.
 
----
+DeleteFile_NotOwner_ReturnsForbid → empêche la suppression par un utilisateur non propriétaire.
 
-## 🧠 Résumé de la posture de sécurité actuelle
+UploadFile_WithPassword_Success → garantit le hachage correct des mots de passe fichiers.
+
+GetFileInfo_NotFound_ReturnsNotFound → évite l’accès à des fichiers inexistants.
+
+                 ┌───────────────┐
+                 │  Navigateur   │
+                 │  (Frontend)   │
+                 └───────┬───────┘
+                         │ HTTPS + JWT Cookie (HttpOnly, Secure, SameSite=Strict)
+                         ▼
+                 ┌───────────────┐
+                 │  API React    │
+                 │  (Validation  │
+                 │   côté front) │
+                 └───────┬───────┘
+                         │ CORS limité
+                         ▼
+                 ┌────────────────────────┐
+                 │ ASP.NET Core API       │
+                 │------------------------│
+                 │ 1. Validation DTO      │
+                 │    - Email regex       │
+                 │    - Password regex    │
+                 │    - Dates & IDs       │
+                 │ 2. Auth JWT            │
+                 │ 3. Accès DB via EFCore │
+                 │    - Pas de SQL brut   │
+                 │ 4. Upload fichiers     │
+                 │    - Chemins contrôlés │
+                 │    - Password hashé    │
+                 │    - Vérif propriétaire│
+                 │ 5. Soft delete         │
+                 └─────────┬──────────────┘
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │ PostgreSQL (DB)    │
+                 │ - Données utilisateurs
+                 │ - Données fichiers
+                 │ - Mots de passe hachés
+                 └────────────────────┘
+
+Test Coverage Backend :
+
+| Type de couverture | %   |
+| ------------------ | --- |
+| Line               | 43% |
+| Branch             | 62% |
+| Method             | 82% |
+
+Test Coverage Frontend :
+
+| Type / Répertoire      | % Stmts | % Branch | % Funcs | % Lines | Commentaire rapide                       |
+| ---------------------- | ------- | -------- | ------- | ------- | ---------------------------------------- |
+| **Global (All files)** | 27.68   | 28.03    | 20.86   | 28.15   | Couverture globale faible                |
+| **Root / src**         | 4.54    | 0        | 20      | 4.54    | Majorité du code non testé               |
+| **Components**         | 83.33   | 50       | 100     | 83.33   | Bien testé, composants critiques         |
+| - Footer               | 100     | 100      | 100     | 100     | Couverture complète                      |
+| - Header               | 53.84   | 50       | 14.28   | 58.33   | Partiellement couvert                    |
+| - Upload               | 0       | 0        | 0       | 0       | Non testé                                |
+| **Config / Themes**    | 50      | 0        | 0       | 50      | Partiellement testé                      |
+| **Helpers**            | 0       | 0        | 0       | 0       | Non testé (`AuthContext`)                |
+| **Pages**              |         |          |         |         |                                          |
+| - Accueil              | 0       | 0        | 0       | 0       | Non testé                                |
+| - Connexion            | 80      | 79.41    | 61.53   | 80      | Bien couvert, tests perf inclus          |
+| - Default              | 0       | 100      | 0       | 0       | Partiellement testé                      |
+| - DownloadFiles        | 0       | 0        | 0       | 0       | Non testé                                |
+| - Inscription          | 0       | 0        | 0       | 0       | Non testé                                |
+| - UsersFiles           | 65.69   | 48.42    | 40      | 67.5    | Tests présents mais coverage perfectible |
+
+🧠 Résumé de la posture de sécurité actuelle
 
 ✔️ Frontend React sûr par défaut contre le XSS réfléchi
-✔️ Backend structuré avec validation des entrées
+✔️ Backend structuré avec validation stricte des entrées
 ✔️ ORM protégeant contre les injections SQL
+✔️ Upload de fichiers sécurisé et mots de passe hachés
 ✔️ Authentification par JWT stocké de manière sécurisée
+✔️ Contrôle strict des droits d’accès aux fichiers
 ✔️ CORS configuré avec une origine explicite
 ✔️ HTTPS actif en développement
-
----
 
 📅 Dernière mise à jour : 2026
 ✍️ Projet : DataShare
