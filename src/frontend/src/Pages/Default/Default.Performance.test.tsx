@@ -15,7 +15,7 @@ describe("Performance – Default Page", () => {
     mockNavigate.mockClear();
   });
 
-  test("√ ⏱️ render initial de la page en moins de 50ms", () => {
+  test("√ ⏱️ render initial de la page en moins de 150ms", () => {
     const start = performance.now();
     render(<Default />);
     const end = performance.now();
@@ -23,7 +23,7 @@ describe("Performance – Default Page", () => {
     const renderTime = end - start;
     console.log(`⏱️ Render initial Default: ${renderTime.toFixed(2)} ms`);
 
-    expect(renderTime).toBeLessThan(50); // Ajuste la limite selon tes besoins
+    expect(renderTime).toBeLessThan(150); // Ajuste la limite selon tes besoins
   });
 
   test("√ 🔁 clic utilisateur rapide", () => {

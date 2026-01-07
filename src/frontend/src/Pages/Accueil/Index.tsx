@@ -5,7 +5,7 @@ import { useAuth } from "../../Helpers/AuthContext";
 import Footer from "../../Components/Footer/Index";
 import Header from "../../Components/Header/Index";
 
-import { ReactComponent as UploadIcon } from "../../Logo.svg";
+import { ReactComponent as UploadIcon } from "../../Assets/Logo.svg";
 /* ************************************************************ Typage ************************************************************ */
 
 interface AccueilProps {

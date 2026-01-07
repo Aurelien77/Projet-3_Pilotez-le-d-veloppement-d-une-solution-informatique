@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer Component devrait être un composant snapshot stable 1`] = `
+<footer
+  style="flex-shrink: 0;"
+>
+  <p
+    style="color: rgb(0, 0, 0); opacity: 0.8; margin: 0px; font-family: Arial, sans-serif;"
+  >
+    Copyright DataShare© 2025
+  </p>
+</footer>
+`;

@@ -183,22 +183,19 @@ Test Coverage Backend :
 
 Test Coverage Frontend :
 
-| Catégorie / Dossier       | Couverture Statements (%) | Branch (%) | Functions (%) | Lines (%) | Commentaires rapides                                                        |
-| ------------------------- | ------------------------- | ---------- | ------------- | --------- | --------------------------------------------------------------------------- |
-| **Global (All files)**    | 62.66                     | 48.88      | 39.56         | 64.27     | Couverture globale moyenne, reste à augmenter surtout branches et fonctions |
-| **src/**                  | 4.54                      | 0          | 20            | 4.54      | Fichiers racines peu testés (index, reportWebVitals)                        |
-| **Composants**            | 83.33                     | 50         | 100           | 83.33     | ProfilerWrapper bien testé, mais branches à compléter                       |
-| **Footer**                | 100                       | 100        | 100           | 100       | Complet                                                                     |
-| **Header**                | 47.05                     | 28.57      | 14.28         | 47.05     | Beaucoup de code non testé, branches et fonctions à compléter               |
-| **Upload**                | 34.69                     | 16.17      | 4.16          | 36.49     | Faible couverture, tester tous les cas de fichier uploadé                   |
-| **Config / Themes**       | 50                        | 0          | 0             | 50        | Thèmes partiellement testés                                                 |
-| **Helpers**               | 0                         | 0          | 0             | 0         | AuthContext non testé du tout                                               |
-| **Pages / Accueil**       | 70.58                     | 59.37      | 36.36         | 72.91     | Couverture correcte, mais certaines lignes non couvertes                    |
-| **Pages / Connexion**     | 75.38                     | 76.47      | 53.84         | 75.38     | Bon niveau de tests, peut encore améliorer fonctions et branches            |
-| **Pages / Default**       | 100                       | 100        | 100           | 100       | Complet                                                                     |
-| **Pages / DownloadFiles** | 97.53                     | 78.04      | 87.5          | 98.75     | Très bon niveau, presque complet                                            |
-| **Pages / Inscription**   | 79.77                     | 67.56      | 65            | 80.68     | Bon, mais certaines lignes restent à tester                                 |
-| **Pages / UsersFiles**    | 65.69                     | 48.42      | 40            | 67.5      | Couverture moyenne, branches et fonctions à compléter                       |
+| Zone / Type               | Statements |   Branches |  Fonctions |     Lignes | Commentaires                                                                                                                                                     |
+| ------------------------- | ---------: | ---------: | ---------: | ---------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Global (All files)**    | **77.40%** | **61.63%** | **55.55%** | **79.24%** | Très bonne couverture globale. Les lignes et statements sont solides, les branches et fonctions restent perfectibles mais acceptables pour un frontend complexe. |
+| **src (root)**            |       100% |       100% |       100% |       100% | Fichiers d’entrée (`App.tsx`, `index.tsx`) totalement couverts, aucun risque critique.                                                                           |
+| **Components (global)**   |     83.33% |     62.50% |       100% |     83.33% | Excellente couverture fonctionnelle. Les branches peuvent être améliorées sur certains cas conditionnels.                                                        |
+| Components / Header       |       100% |       100% |       100% |       100% | Composant totalement testé, très robuste.                                                                                                                        |
+| Components / Footer       |       100% |       100% |       100% |       100% | Composant simple et parfaitement couvert.                                                                                                                        |
+| Components / Upload       |     74.82% |     69.11% |     41.66% |     78.10% | Composant complexe. Bonne couverture globale mais certaines fonctions internes et cas limites restent à tester.                                                  |
+| **Helpers (AuthContext)** |       100% |       100% |       100% |       100% | Excellente couverture, logique critique bien sécurisée.                                                                                                          |
+| **Config / Themes**       |        50% |         0% |         0% |        50% | Configuration peu testée (acceptable). Priorité basse car logique simple et peu critique.                                                                        |
+| **Pages / Accueil**       |     70.58% |     59.37% |     36.36% |     72.91% | Couverture correcte. Certaines fonctions UI et branches conditionnelles peuvent être améliorées.                                                                 |
+| **Pages / Connexion**     |     75.38% |     76.47% |     53.84% |     75.38% | Très bon niveau, notamment sur la gestion d’erreurs et les scénarios utilisateur.                                                                                |
+| **Pages / Inscription**   |     79.77% |     67.56% |     65.00% |     80.68% | Bon équilibre entre tests fonctionnels,                                                                                                                          |
 
 
 🧠 Résumé de la posture de sécurité actuelle

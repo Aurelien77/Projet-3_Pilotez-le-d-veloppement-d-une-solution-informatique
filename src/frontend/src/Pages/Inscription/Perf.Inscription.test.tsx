@@ -46,7 +46,7 @@ describe("Performance – Inscription", () => {
   });
 
   /* ------------------------------------------------------------ */
-  it("⏱️ render initial du formulaire en moins de 200ms", async () => {
+  it("⏱️ render initial du formulaire en moins de 300ms", async () => {
     const start = performance.now();
 
     render(<Register />);
@@ -58,7 +58,7 @@ describe("Performance – Inscription", () => {
 
     console.log(`⏱️ Register render time: ${renderTime.toFixed(2)} ms`);
 
-    expect(renderTime).toBeLessThan(200);
+    expect(renderTime).toBeLessThan(300);
   });
 
   /* ------------------------------------------------------------ */

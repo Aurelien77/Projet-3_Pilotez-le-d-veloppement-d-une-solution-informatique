@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import theme from "../../Config/Themes/Index";
 import { useAuth } from "../../Helpers/AuthContext";
-import { ReactComponent as UploadIcon } from "../../Logo2.svg";
+import { ReactComponent as UploadIcon } from "../../Assets/Logo2.svg";
 /* ************************************************************ Typage ************************************************************ */
 
 interface FileUploadProps {

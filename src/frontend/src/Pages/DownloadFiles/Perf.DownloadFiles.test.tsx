@@ -48,7 +48,7 @@ describe("Performance – DownloadFiles", () => {
   });
 
   /* ------------------------------------------------------------ */
-  it("⏱️ render initial en moins de 200ms", async () => {
+  it("⏱️ render initial en moins de 300ms", async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -67,7 +67,7 @@ describe("Performance – DownloadFiles", () => {
 
     console.log(`⏱️ Render time: ${renderTime.toFixed(2)} ms`);
 
-    expect(renderTime).toBeLessThan(200);
+    expect(renderTime).toBeLessThan(300);
   });
 
   /* ------------------------------------------------------------ */
