@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import theme from "../../Config/Themes/Index";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Helpers/AuthContext";
 
 interface HeaderProps {
   logoText?: string;
@@ -17,15 +17,23 @@ interface HeaderProps {
   setHover?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", buttonText = "Se connecter", onButtonClick, logoStyle, buttonStyle }) => {
+const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", logoStyle, buttonStyle }) => {
   const navigate = useNavigate();
+  const { authState, logout } = useAuth();
+
   const [hoverLogo, setHoverLogo] = useState(false);
-  const [hoverButton, setHoverButton] = useState(false);
+  const label = authState.status ? "Déconnexion" : "Connexion";
+  const handleHome = () => {
+    if (authState.status) {
+      logout();
+      navigate("/");
+    } else {
+      navigate("/Connexion");
+    }
+  };
 
-  const handleHome = () => navigate("/");
-
-  onButtonClick = () => {
-    navigate("/Connexion");
+  const handleButtonClick = () => {
+    navigate("/");
   };
 
   return (
@@ -40,6 +48,7 @@ const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", buttonText = "S
       }}
     >
       <h1
+        data-testid="header-logo"
         style={{
           ...logoStyle,
           cursor: hoverLogo ? "pointer" : "default",
@@ -47,22 +56,23 @@ const Header: React.FC<HeaderProps> = ({ logoText = "DataShare", buttonText = "S
           margin: 0,
           marginLeft: "clamp(2vw, 7vw, 4vw)",
         }}
-        onClick={handleHome}
+        onClick={handleButtonClick}
         onMouseEnter={() => setHoverLogo(true)}
         onMouseLeave={() => setHoverLogo(false)}
       >
         {logoText}
       </h1>
       <button
+        data-testid="header-login-button"
         style={{
           ...buttonStyle,
           marginRight: "clamp(2vw, 6vw, 4vw)",
         }}
-        onClick={onButtonClick}
-        onMouseEnter={() => setHoverButton(true)}
-        onMouseLeave={() => setHoverButton(false)}
+        onClick={handleHome}
+        onMouseEnter={() => setHoverLogo(true)}
+        onMouseLeave={() => setHoverLogo(false)}
       >
-        {buttonText}
+        {label}
       </button>
     </header>
   );

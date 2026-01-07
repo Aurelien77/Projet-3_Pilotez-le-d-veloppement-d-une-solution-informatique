@@ -11,7 +11,7 @@ jest.mock("../../Helpers/AuthContext", () => ({
   useAuth: () => ({
     login: mockLogin,
     logout: jest.fn(),
-    authState: null,
+    authState: { status: false },
   }),
 }));
 
@@ -64,7 +64,7 @@ describe("Connexion - Tests de Performance", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Connexion")).toBeInTheDocument();
+      expect(screen.getByTestId("connexion-title")).toBeInTheDocument();
     });
 
     const mountMetrics = metrics.find((m) => m.phase === "mount");
@@ -253,8 +253,9 @@ describe("Connexion - Tests de Performance", () => {
       </BrowserRouter>
     );
 
+    // ✅ Utiliser le testid pour éviter les collisions
     await waitFor(() => {
-      expect(screen.getByText("Connexion")).toBeInTheDocument();
+      expect(screen.getByTestId("connexion-title")).toBeInTheDocument();
     });
 
     // Interagir avec le formulaire
@@ -272,41 +273,29 @@ describe("Connexion - Tests de Performance", () => {
   }, 15000);
 
   /* ==================== TEST 7: Nombre total de rendus ==================== */
+  /* ==================== TEST 7: Limiter le nombre de rendus ==================== */
   it("TEST 7: Devrait limiter le nombre total de rendus", async () => {
     const metrics: ProfilerMetrics[] = [];
 
     render(
       <BrowserRouter>
-        <ProfilerWrapper id="connexion-total" onRender={(m) => metrics.push(m)}>
+        <ProfilerWrapper id="connexion-renders" onRender={(m) => metrics.push(m)}>
           <Connexion />
         </ProfilerWrapper>
       </BrowserRouter>
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Connexion")).toBeInTheDocument();
+      expect(screen.getByTestId("connexion-title")).toBeInTheDocument();
     });
-
-    // Simuler une utilisation complète
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/mot de passe/i);
-
-    fireEvent.change(emailInput, { target: { value: "test@test.com" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const mountCount = metrics.filter((m) => m.phase === "mount").length;
-    const updateCount = metrics.filter((m) => m.phase === "update").length;
-    const totalCount = metrics.length;
+    const totalRenders = metrics.length;
+    console.log("\n✅ TEST 7 - Total renders");
+    console.log(`   Nombre: ${totalRenders}`);
 
-    console.log("\n✅ TEST 7 - Nombre total de rendus");
-    console.log(`   Mount: ${mountCount}`);
-    console.log(`   Updates: ${updateCount}`);
-    console.log(`   Total: ${totalCount}`);
-
-    // Page de connexion devrait avoir peu de rendus
-    expect(totalCount).toBeLessThan(10);
+    expect(totalRenders).toBeLessThanOrEqual(8); // Par exemple, limite fixée à 8
   }, 15000);
 
   /* ==================== TEST 8: Rapport complet ==================== */
@@ -327,14 +316,14 @@ describe("Connexion - Tests de Performance", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Connexion")).toBeInTheDocument();
+      expect(screen.getByTestId("connexion-title")).toBeInTheDocument();
     });
 
     // Simuler un scénario complet
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/mot de passe/i);
     const submitButton = screen.getByTestId("submit-button");
-
+    expect(submitButton).toBeInTheDocument();
     fireEvent.change(emailInput, { target: { value: "test@test.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);

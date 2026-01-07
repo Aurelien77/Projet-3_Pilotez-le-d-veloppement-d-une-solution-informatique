@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import theme from "../../Config/Themes/Index";
-import { useNavigate } from "react-router-dom";
 import FileUpload from "../../Components/Upload";
 import { useAuth } from "../../Helpers/AuthContext";
 import Footer from "../../Components/Footer/Index";
@@ -48,15 +47,23 @@ const Accueil: React.FC<AccueilProps> = ({
 
   const [buttonshareActived, setbuttonshareActived] = useState(false);
 
+  const auth = useAuth();
+
+  const { authState } = useAuth();
   /* ************************************************************ Effects ************************************************************ */
 
   useEffect(() => {
+    if (authState.status) {
+      setShowGarde(false);
+      return;
+    }
+
     const timer = setTimeout(() => {
       setShowGarde(false);
     }, transitionDelay);
 
     return () => clearTimeout(timer);
-  }, [transitionDelay]);
+  }, [transitionDelay, authState.status]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -87,16 +94,6 @@ const Accueil: React.FC<AccueilProps> = ({
       setIsUploadModalOpen(false);
     }
   };
-
-  // Test du Helper
-
-  const auth = useAuth();
-
-  console.log(auth);
-
-  const { authState } = useAuth();
-
-  console.log("Utilisateur connecté :", authState);
 
   /* ************************************************************ CSS Page de Garde ************************************************************ */
 
@@ -140,7 +137,6 @@ const Accueil: React.FC<AccueilProps> = ({
   };
 
   /* ************************************************************ CSS Page d'Acceuil ************************************************************ */
-  const [hover, setHover] = React.useState(false);
   const [uploadHover2, setUploadHover2] = React.useState(false);
 
   /* ***********************  Header Style   * ********************** */
@@ -250,12 +246,14 @@ const Accueil: React.FC<AccueilProps> = ({
   return (
     <>
       {/*Page de garde  */}
-      <div style={gardeContainer}>
-        <div style={textWrapperStyle}>
-          <h1 style={gardeTitleStyle}>{gardeTitle}</h1>
-          <h2 style={gardeSubtitleStyle}>{gardeSubtitle}</h2>
+      {!authState.status && (
+        <div style={gardeContainer}>
+          <div style={textWrapperStyle}>
+            <h1 style={gardeTitleStyle}>{gardeTitle}</h1>
+            <h2 style={gardeSubtitleStyle}>{gardeSubtitle}</h2>
+          </div>
         </div>
-      </div>
+      )}
 
       {/*Page d'accueil  */}
       <div style={pageContainer}>

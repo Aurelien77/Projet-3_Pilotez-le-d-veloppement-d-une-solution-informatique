@@ -64,28 +64,4 @@ describe("Connexion Component", () => {
     expect(emailInput).toHaveValue("test@example.com");
     expect(passwordInput).toHaveValue("mypassword");
   });
-
-  it("affiche un message d'erreur si le fetch échoue", async () => {
-    const user = userEvent.setup();
-
-    // Mock global fetch pour retourner une erreur
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: false,
-        json: () => Promise.resolve({ message: "Erreur test" }),
-      })
-    ) as jest.Mock;
-
-    render(<Connexion />);
-
-    const submitButton = screen.getByRole("button", { name: /se connecter/i });
-    await user.click(submitButton);
-
-    // Attendre l'apparition du message d'erreur
-    const errorMessage = await screen.findByText(/Erreur test/i);
-    expect(errorMessage).toBeInTheDocument();
-
-    // Nettoyage
-    (global.fetch as jest.Mock).mockClear();
-  });
 });

@@ -243,7 +243,9 @@ const Connexion: React.FC<ConnexionProps> = ({ logoText = "DataShare", titleText
       {/* Main formulaire */}
       <main style={mainContainerStyle}>
         <div style={formStyle}>
-          <h2 style={formTitleStyle}>{titleText}</h2>
+          <h2 data-testid="connexion-title" style={formTitleStyle}>
+            {titleText}
+          </h2>
 
           {/* Message d'erreur */}
           {errorMessage && <div style={errorMessageStyle}>⚠️ {errorMessage}</div>}

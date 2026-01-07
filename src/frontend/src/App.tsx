@@ -4,7 +4,7 @@ import { AuthProvider } from "./Helpers/AuthContext";
 import Login from "./Pages/Accueil/Index";
 import DefaultPage from "./Pages/Default/Index";
 import Connexion from "./Pages/Connexion/Index";
-import Register from "./Pages/Inscription/index";
+import Register from "./Pages/Inscription/Index";
 import Usersfiles from "./Pages/UsersFiles/Index";
 import DownloadFile from "./Pages/DownloadFiles/Index";
 
