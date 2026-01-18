@@ -34,25 +34,23 @@ Object.assign(navigator, {
 
 // Mock DataTransfer si nécessaire
 if (typeof DataTransfer === "undefined") {
-  (global as any).DataTransfer = class DataTransfer {
-    items: any[] = [];
-    files: File[] = [];
+  class MockDataTransfer {
+    private _files: File[] = [];
 
-    constructor() {
-      Object.defineProperty(this, "files", {
-        get: () => this.items,
-        enumerable: true,
-      });
+    get files() {
+      return this._files;
     }
 
     get items() {
       return {
         add: (file: File) => {
-          this.files.push(file);
+          this._files.push(file);
         },
       };
     }
-  };
+  }
+
+  (global as any).DataTransfer = MockDataTransfer;
 }
 
 // Mock des réponses API

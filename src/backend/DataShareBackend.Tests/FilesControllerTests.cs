@@ -518,7 +518,93 @@ namespace DataShareBackend.Tests
 
             _output.WriteLine("Fichier supprimé (soft delete) avec succès");
         }
+        //*************************************** DOWNLOAD FILE ************************************** //
 
-       
+        //********************************** ERRORS **********************************//
+
+        [Fact]
+        public async Task DownloadFileSecure_PasswordMissing_ReturnsUnauthorized()
+        {
+            await using var context = CreateContext("TestDb_Download_NoPassword");
+
+            var file = new Files
+            {
+                FileName = "secure.txt",
+                FilePath = "file.txt",
+                EndDate = DateTime.UtcNow.AddDays(1),
+                CreationDate = DateTime.UtcNow,
+                Deleted = false,
+                FilePassword = _passwordService.HashPassword("Secret123!")
+            };
+            context.Files.Add(file);
+            await context.SaveChangesAsync();
+
+            var controller = CreateController(context);
+
+            var result = await controller.DownloadFileSecure(
+                file.Id,
+                new FileDownloadRequestDto { Password = null }
+            );
+
+            Assert.IsType<UnauthorizedObjectResult>(result);
+        }
+
+
+
+
+        //********************************** SUCCES **********************************//
+        [Fact]
+        public async Task DownloadFileSecure_WithCorrectPassword_ReturnsFile()
+        {
+            // Arrange
+            await using var context = CreateContext("TestDb_Download_Success");
+
+            var user = new Users
+            {
+                Email = "test@example.com",
+                Login = "TestUser",
+                Password = _passwordService.HashPassword("Password123!"),
+                CreatedAt = DateTime.UtcNow
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+
+            var uploadsPath = Path.Combine(Path.GetTempPath(), "uploads");
+            Directory.CreateDirectory(uploadsPath);
+
+            var physicalFileName = "file-guid.txt";
+            var physicalFilePath = Path.Combine(uploadsPath, physicalFileName);
+            await File.WriteAllTextAsync(physicalFilePath, "Hello secure world");
+
+            var file = new Files
+            {
+                IdUser = user.Id,
+                FileName = "secure.txt",
+                FilePath = physicalFileName,
+                EndDate = DateTime.UtcNow.AddDays(1),
+                CreationDate = DateTime.UtcNow,
+                Deleted = false,
+                FilePassword = _passwordService.HashPassword("Secret123!")
+            };
+            context.Files.Add(file);
+            await context.SaveChangesAsync();
+
+            var controller = CreateController(context);
+
+            var dto = new FileDownloadRequestDto
+            {
+                Password = "Secret123!"
+            };
+
+            // Act
+            var result = await controller.DownloadFileSecure(file.Id, dto);
+
+            // Assert
+            var fileResult = Assert.IsType<FileStreamResult>(result);
+            Assert.Equal("secure.txt", fileResult.FileDownloadName);
+
+            _output.WriteLine("✅ Téléchargement sécurisé réussi");
+        }
+
     }
 }

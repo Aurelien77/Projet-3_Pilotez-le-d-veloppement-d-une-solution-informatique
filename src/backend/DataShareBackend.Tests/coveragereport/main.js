@@ -213,8 +213,8 @@ var assemblies = [
   {
     "name": "DataShareBackend",
     "classes": [
-      { "name": "DataShareBackend.Controllers.FilesController", "rp": "DataShareBackend_FilesController.html", "cl": 176, "ucl": 61, "cal": 237, "tl": 294, "cb": 36, "tb": 82, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "DataShareBackend.Controllers.UsersController", "rp": "DataShareBackend_UsersController.html", "cl": 119, "ucl": 18, "cal": 137, "tl": 237, "cb": 56, "tb": 60, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "DataShareBackend.Controllers.FilesController", "rp": "DataShareBackend_FilesController.html", "cl": 136, "ucl": 38, "cal": 174, "tl": 294, "cb": 29, "tb": 44, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "DataShareBackend.Controllers.UsersController", "rp": "DataShareBackend_UsersController.html", "cl": 86, "ucl": 11, "cal": 97, "tl": 242, "cb": 28, "tb": 30, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DataShareBackend.Data.DataShareDbContext", "rp": "DataShareBackend_DataShareDbContext.html", "cl": 86, "ucl": 0, "cal": 86, "tl": 120, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DataShareBackend.DTO.CreateUserDto", "rp": "DataShareBackend_CreateUserDto.html", "cl": 6, "ucl": 0, "cal": 6, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DataShareBackend.DTO.DownloadFileDto", "rp": "DataShareBackend_DownloadFileDto.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 32, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -226,9 +226,7 @@ var assemblies = [
       { "name": "DataShareBackend.Models.Users", "rp": "DataShareBackend_Users.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DataShareBackend.Startup", "rp": "DataShareBackend_Startup.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DeleteFileDto", "rp": "DataShareBackend_DeleteFileDto.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "FileDownloadRequestDto", "rp": "DataShareBackend_FileDownloadRequestDto.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 4, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PasswordService", "rp": "DataShareBackend_PasswordService.html", "cl": 5, "ucl": 3, "cal": 8, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Program", "rp": "DataShareBackend_Program.html", "cl": 0, "ucl": 53, "cal": 53, "tl": 68, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "TokenService", "rp": "DataShareBackend_TokenService.html", "cl": 25, "ucl": 0, "cal": 25, "tl": 45, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "TokenSetting", "rp": "DataShareBackend_TokenSetting.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
@@ -245,28 +243,16 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "DataShareBackend", "class": "DataShareBackend.Controllers.FilesController", "reportPath": "DataShareBackend_FilesController.html", "methodName": "DownloadFile()", "methodShortName": "DownloadFile()", "fileIndex": 0, "line": 150,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "DataShareBackend", "class": "DataShareBackend.Controllers.FilesController", "reportPath": "DataShareBackend_FilesController.html", "methodName": "DownloadFileSecure()", "methodShortName": "DownloadFileSecure()", "fileIndex": 0, "line": 126,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "DataShareBackend", "class": "DataShareBackend.Controllers.UsersController", "reportPath": "DataShareBackend_UsersController.html", "methodName": "CreateUser()", "methodShortName": "CreateUser()", "fileIndex": 0, "line": 75,
-    "metrics": [
-      { "value": 20, "exceeded": false },
-      { "value": 20, "exceeded": true },
-    ]},
-  {
     "assembly": "DataShareBackend", "class": "DataShareBackend.Controllers.UsersController", "reportPath": "DataShareBackend_UsersController.html", "methodName": "CreateUser()", "methodShortName": "CreateUser()", "fileIndex": 0, "line": 74,
     "metrics": [
       { "value": 20, "exceeded": false },
       { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "DataShareBackend", "class": "DataShareBackend.Controllers.FilesController", "reportPath": "DataShareBackend_FilesController.html", "methodName": "DownloadFileSecure()", "methodShortName": "DownloadFileSecure()", "fileIndex": 0, "line": 126,
+    "metrics": [
+      { "value": 20, "exceeded": false },
+      { "value": 16, "exceeded": true },
     ]},
 ];
 

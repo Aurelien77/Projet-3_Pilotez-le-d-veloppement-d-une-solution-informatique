@@ -1,6 +1,7 @@
 using DataShareBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,3 +67,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+[ExcludeFromCodeCoverage]
+public partial class Program { }

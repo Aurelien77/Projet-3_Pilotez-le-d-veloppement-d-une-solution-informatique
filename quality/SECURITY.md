@@ -183,19 +183,38 @@ Test Coverage Backend :
 
 Test Coverage Frontend :
 
-| Zone / Type               | Statements |   Branches |  Fonctions |     Lignes | Commentaires                                                                                                                                                     |
-| ------------------------- | ---------: | ---------: | ---------: | ---------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Global (All files)**    | **77.40%** | **61.63%** | **55.55%** | **79.24%** | Très bonne couverture globale. Les lignes et statements sont solides, les branches et fonctions restent perfectibles mais acceptables pour un frontend complexe. |
-| **src (root)**            |       100% |       100% |       100% |       100% | Fichiers d’entrée (`App.tsx`, `index.tsx`) totalement couverts, aucun risque critique.                                                                           |
-| **Components (global)**   |     83.33% |     62.50% |       100% |     83.33% | Excellente couverture fonctionnelle. Les branches peuvent être améliorées sur certains cas conditionnels.                                                        |
-| Components / Header       |       100% |       100% |       100% |       100% | Composant totalement testé, très robuste.                                                                                                                        |
-| Components / Footer       |       100% |       100% |       100% |       100% | Composant simple et parfaitement couvert.                                                                                                                        |
-| Components / Upload       |     74.82% |     69.11% |     41.66% |     78.10% | Composant complexe. Bonne couverture globale mais certaines fonctions internes et cas limites restent à tester.                                                  |
-| **Helpers (AuthContext)** |       100% |       100% |       100% |       100% | Excellente couverture, logique critique bien sécurisée.                                                                                                          |
-| **Config / Themes**       |        50% |         0% |         0% |        50% | Configuration peu testée (acceptable). Priorité basse car logique simple et peu critique.                                                                        |
-| **Pages / Accueil**       |     70.58% |     59.37% |     36.36% |     72.91% | Couverture correcte. Certaines fonctions UI et branches conditionnelles peuvent être améliorées.                                                                 |
-| **Pages / Connexion**     |     75.38% |     76.47% |     53.84% |     75.38% | Très bon niveau, notamment sur la gestion d’erreurs et les scénarios utilisateur.                                                                                |
-| **Pages / Inscription**   |     79.77% |     67.56% |     65.00% |     80.68% | Bon équilibre entre tests fonctionnels,                                                                                                                          |
+-------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------------------
+All files                |   78.91 |    63.93 |   60.74 |    80.5 |                                                                                            
+ src                     |     100 |      100 |     100 |     100 |                                                                                            
+  App.tsx                |     100 |      100 |     100 |     100 |                                                                                            
+  index.tsx              |     100 |      100 |     100 |     100 |                                                                                            
+ src/Components          |   83.33 |     62.5 |     100 |   83.33 |                                                                                           
+  ProfilerWrapper.tsx    |   83.33 |     62.5 |     100 |   83.33 | 46,50                                                                                     
+ src/Components/Footer   |     100 |      100 |     100 |     100 |                                                                                           
+  Index.tsx              |     100 |      100 |     100 |     100 |                                                                                           
+ src/Components/Header   |     100 |      100 |     100 |     100 |                                                                                           
+  Index.tsx              |     100 |      100 |     100 |     100 |                                                                                           
+ src/Components/Upload   |   74.82 |    69.11 |   41.66 |    78.1 |                                                                                           
+  index.tsx              |   74.82 |    69.11 |   41.66 |    78.1 | 67-69,83-84,91-92,115-120,153-161,165-166,445-474,520                                     
+ src/Config/Themes       |     100 |      100 |     100 |     100 |                                                                                           
+  Index.tsx              |     100 |      100 |     100 |     100 |                                                                                           
+ src/Helpers             |     100 |      100 |     100 |     100 |                                                                                           
+  AuthContext.tsx        |     100 |      100 |     100 |     100 |                                                                                           
+ src/Pages/Accueil       |   88.23 |    81.25 |    90.9 |    87.5 |                                                                                           
+  Index.tsx              |   88.23 |    81.25 |    90.9 |    87.5 | 82-83,90-94                                                                               
+ src/Pages/Connexion     |   75.38 |    76.47 |   53.84 |   75.38 |                                                                                           
+  Index.tsx              |   75.38 |    76.47 |   53.84 |   75.38 | 85-87,92,298-334                                                                          
+ src/Pages/Default       |     100 |      100 |     100 |     100 |                                                                                           
+  Index.tsx              |     100 |      100 |     100 |     100 |                                                                                           
+ src/Pages/DownloadFiles |   97.53 |    78.04 |    87.5 |   98.75 |                                                                                           
+  Index.tsx              |   97.53 |    78.04 |    87.5 |   98.75 | 351                                                                                       
+ src/Pages/Inscription   |   79.77 |    67.56 |      65 |   80.68 |                                                                                           
+  Index.tsx              |   79.77 |    67.56 |      65 |   80.68 | 71-72,100-105,115-116,121,125,451-456,471-512                                             
+ src/Pages/UsersFiles    |   65.69 |    48.42 |      40 |    67.5 |                                                                                           
+  Index.tsx              |   65.69 |    48.42 |      40 |    67.5 | 67-69,90,96-98,109,126,132,144,148,155-171,176-182,186,197-204,222-236,632-685,691,711-764
+-------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------------------
 
 
 🧠 Résumé de la posture de sécurité actuelle

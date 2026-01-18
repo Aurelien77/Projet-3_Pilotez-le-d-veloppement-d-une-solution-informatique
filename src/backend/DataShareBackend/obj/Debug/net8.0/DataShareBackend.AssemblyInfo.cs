@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+496761a4ab6281c77f5b4ecb6c4fed84c06c4454")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c010ae57618fd8c9ae703057983443c680750a3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataShareBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Accueil Component Snapshots devrait correspondre au snapshot (connecté) 1`] = `
+<div
+  style="min-height: 100vh; width: 100%; font-family: Arial, sans-serif; display: flex; flex-direction: column; opacity: 1; transition: opacity 0.8s ease-in-out;"
+>
+  <div
+    data-testid="header-mock"
+  >
+    Header Mock
+  </div>
+  <main
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; margin-bottom: 0px;"
+  >
+    <h2
+      style="font-weight: 400; color: rgb(0, 0, 0); margin-bottom: 40px; text-align: center; font-family: Arial, sans-serif;"
+    >
+      Tu veux partager un fichier ?
+    </h2>
+    <div
+      style="position: relative; display: flex; align-items: center; justify-content: center;"
+    >
+      <div
+        style="border-radius: 50%; background: rgba(45, 55, 72, 0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; transform: scale(1);"
+      >
+        <div
+          style="border-radius: 50%; background: rgb(16, 2, 24); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: none;"
+        >
+          <svg
+            style="color: white;"
+          />
+        </div>
+      </div>
+    </div>
+  </main>
+  <div
+    data-testid="file-upload-mock"
+  />
+  <div
+    data-testid="footer-mock"
+  >
+    Footer Mock
+  </div>
+</div>
+`;
+
+exports[`Accueil Component Snapshots devrait correspondre au snapshot (déconnecté) 1`] = `
+<div
+  style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Arial, sans-serif; position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out; visibility: visible;"
+>
+  <div
+    style="text-align: center; animation: fadeIn 1s ease-in;"
+  >
+    <h1
+      style="font-weight: 700; color: rgb(0, 0, 0); font-family: Arial, sans-serif; margin-bottom: 20px;"
+    >
+      DataShare
+    </h1>
+    <h2
+      style="font-weight: 400; font-style: italic; color: rgb(0, 0, 0); font-family: Arial, sans-serif;"
+    >
+      « Nous gardons vos fichiers en toute sécurité »
+    </h2>
+  </div>
+</div>
+`;
+
+exports[`Accueil Component Snapshots devrait correspondre au snapshot (mobile) 1`] = `
+<div
+  style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Arial, sans-serif; position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out; visibility: visible;"
+>
+  <div
+    style="text-align: center; animation: fadeIn 1s ease-in;"
+  >
+    <h1
+      style="font-weight: 700; color: rgb(0, 0, 0); font-family: Arial, sans-serif; margin-bottom: 20px;"
+    >
+      DataShare
+    </h1>
+    <h2
+      style="font-weight: 400; font-style: italic; color: rgb(0, 0, 0); font-family: Arial, sans-serif;"
+    >
+      « Nous gardons vos fichiers en toute sécurité »
+    </h2>
+  </div>
+</div>
+`;

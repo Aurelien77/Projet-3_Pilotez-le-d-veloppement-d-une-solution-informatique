@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import theme from "../../Config/Themes/Index";
-import FileUpload from "../../Components/Upload";
+import FileUpload from "../../Components/Upload/Index";
 import { useAuth } from "../../Helpers/AuthContext";
 import Footer from "../../Components/Footer/Index";
 import Header from "../../Components/Header/Index";

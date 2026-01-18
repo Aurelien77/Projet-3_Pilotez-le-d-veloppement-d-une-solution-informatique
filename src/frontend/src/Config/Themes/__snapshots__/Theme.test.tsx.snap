@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Theme Configuration Snapshot Testing devrait correspondre au snapshot de UploadIcon avec props personnalisées 1`] = `
+<svg
+  height="75"
+  viewBox="34 42 32 23"
+  width="75"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M 35 55
+ C 35 52, 37 50, 40 50
+ C 40 45, 44 42, 50 42
+ C 56 42, 60 45, 60 50
+ C 63 50, 65 52, 65 55
+ C 65 58, 63 60, 60 60
+ L 40 60
+ C 37 60, 35 58, 35 55 Z"
+    fill="none"
+    stroke="#FF812D"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2.5"
+  />
+  <g
+    fill="none"
+    stroke="#FF812D"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2.5"
+  >
+    <line
+      x1="50"
+      x2="50"
+      y1="65"
+      y2="48"
+    />
+    <polyline
+      points="45,53 50,48 55,53"
+    />
+  </g>
+</svg>
+`;
+
+exports[`Theme Configuration Snapshot Testing devrait correspondre au snapshot de la structure du thème 1`] = `
+Object {
+  "colors": Array [
+    "primary",
+    "secondary",
+    "text",
+    "textLight",
+    "white",
+    "black",
+  ],
+  "fonts": Array [
+    "primary",
+    "italic",
+  ],
+  "gradients": Array [
+    "main",
+  ],
+  "logos": Array [
+    "UploadIcon",
+  ],
+}
+`;
+
+exports[`Theme Configuration Snapshot Testing devrait correspondre au snapshot du rendu de UploadIcon 1`] = `
+<svg
+  height="100"
+  viewBox="34 42 32 23"
+  width="100"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M 35 55
+ C 35 52, 37 50, 40 50
+ C 40 45, 44 42, 50 42
+ C 56 42, 60 45, 60 50
+ C 63 50, 65 52, 65 55
+ C 65 58, 63 60, 60 60
+ L 40 60
+ C 37 60, 35 58, 35 55 Z"
+    fill="none"
+    stroke="white"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2.5"
+  />
+  <g
+    fill="none"
+    stroke="white"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2.5"
+  >
+    <line
+      x1="50"
+      x2="50"
+      y1="65"
+      y2="48"
+    />
+    <polyline
+      points="45,53 50,48 55,53"
+    />
+  </g>
+</svg>
+`;
