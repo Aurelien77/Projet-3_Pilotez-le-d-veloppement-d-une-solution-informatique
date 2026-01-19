@@ -47,53 +47,6 @@ Testing
 MSW 1.2.3 (Mock Service Worker) - Mocking des requêtes API
 Identity-obj-proxy 3.0.0 - Mock des imports CSS pour les tests
 
-📁 Structure du Projet
-Backend
-DataShareBackend/
-├── Controllers/          # Contrôleurs API
-│   ├── FilesControllers.cs
-│   └── UsersController.cs
-├── Data/                # Contexte de base de données
-│   └── DataShareDbContext.cs
-├── DTO/                 # Data Transfer Objects
-│   ├── CreateUserDTO.cs
-│   ├── DeleteFileDTO.cs
-│   ├── FileDownloadrequestDto.cs
-│   ├── FilesController.cs
-│   └── LoginDto.cs
-├── Migrations/          # Migrations Entity Framework
-├── Models/              # Modèles de données
-├── Services/            # Services métier
-├── appsettings.json     # Configuration
-├── Program.cs           # Point d'entrée
-└── Startup.cs           # Configuration de démarrage
-Frontend
-frontend/
-├── public/              # Fichiers statiques
-├── src/
-│   ├── __mocks__/       # Mocks pour les tests
-│   ├── Assets/          # Ressources (logos, images)
-│   ├── Components/      # Composants réutilisables
-│   │   ├── Footer/
-│   │   ├── Header/
-│   │   ├── Upload/
-│   │   ├── ProfilerWrapper.tsx
-│   │   └── AuthContext.tsx
-│   ├── Config/          # Configuration et thèmes
-│   │   └── Themes/
-│   ├── Helpers/         # Fonctions utilitaires
-│   ├── Pages/           # Pages de l'application
-│   │   ├── Accueil/
-│   │   ├── Connexion/
-│   │   ├── Default/
-│   │   ├── DownloadFiles/
-│   │   ├── Inscription/
-│   │   └── UsersFiles/
-│   ├── App.tsx          # Composant racine
-│   ├── App.css          # Styles globaux
-│   ├── index.tsx        # Point d'entrée React
-│   └── react-app-env.d.ts
-└── package.json         # Dépendances et scripts
 🚀 Installation et Démarrage
 Prérequis
 
